@@ -7,8 +7,12 @@ const path = require('path');
 
 const app = express();
 
+const routes = require('./routes/index');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use('/', routes);
 
 app.get('/', (req, res) => {
   res.send('Home page...');
