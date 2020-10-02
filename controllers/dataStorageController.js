@@ -39,7 +39,7 @@ client.connect()
 
 const fillBuffer = async (req, res) => {
   return new Promise((resolve) => {
-    let buffer = '';
+    let buffer = Buffer.from('').toString('base64');
 
     req.on('data', data => {
       buffer += data.toString('base64');
