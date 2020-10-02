@@ -63,7 +63,7 @@ const uploadFile = async (req, res) => {
 
   client.execute(upsertFile, params, { prepare: true }, (err, result) => {
     if(!err) {
-      console.log(getCurrTimeConsole() + 'API: Chunk has been upploaded... Chunk size is: ' + objBuffer.length);
+      console.log(getCurrTimeConsole() + 'API: File has been upploaded... Chunk size is: ' + objBuffer.length);
       res.json({ 'status': 'File upload finished...' });
     } else {
       console.log(err)
