@@ -45,17 +45,18 @@ const uploadFile = (req, res) => {
   let counter = 0;
 
   req.on('data', (data) => {
+    const objBufferLength = Buffer.byteLength(data);
     const objBuffer = new Buffer.from(data, 'base64');
     // const objBuffer = new Buffer.from(data.toString(), 'base64');
     // const content = readFileSync(resolve(__dirname + '../../files/' + 'small_file.jpeg'), 'base64');
     // const objBuffer = new Buffer.from(content, 'base64');
     // const objBuffer = new Buffer.alloc(Buffer.byteLength(content, 'base64'), content, 'base64');
 
-    const params = [uuid, counter++, 'small_file.jpeg', Buffer.byteLength(objBuffer, 'base64'), date, time, objBuffer];
+    const params = [uuid, counter++, 'small_file.jpeg', objBufferLength, date, time, objBuffer];
 
     client.execute(upsertFile, params, { prepare: true }, (err, result) => {
       if(!err) {
-        console.log(getCurrTimeConsole() + 'API: Chunk has been upploaded...');
+        console.log(getCurrTimeConsole() + 'API: Chunk has been upploaded... Chunk size is: ' + objBufferLength);
       } else {
         console.log(err)
       }
