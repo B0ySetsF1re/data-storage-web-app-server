@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+const getCurrentTime = require('./lib/debuggingTools/getCurrentTime/index');
+
 const express = require('express');
 
 const bodyParser = require('body-parser');
@@ -17,6 +19,6 @@ app.use('/', routes);
 app.use('/api/files', files);
 
 app.listen(process.env.PORT, process.env.HOST);
-console.log('Server started on port ' + process.env.PORT);
+console.log(getCurrentTime() + 'Server started on port ' + process.env.PORT);
 
 module.exports = app;
