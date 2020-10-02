@@ -56,14 +56,9 @@ const uploadFile = async (req, res) => {
   const date = cassandra.types.LocalDate.now();
   const time = cassandra.types.LocalTime.now();
 
-  const objBuffer = new Buffer.from(await fillBuffer(req, res));
-  // const objBufferLength = Buffer.byteLength(objBuffer);
-  // const objBuffer = new Buffer.from(data.toString(), 'base64');
-  // const content = readFileSync(resolve(__dirname + '../../files/' + 'small_file.jpeg'), 'base64');
-  // const objBuffer = new Buffer.from(content, 'base64');
-  // const objBuffer = new Buffer.alloc(Buffer.byteLength(content, 'base64'), content, 'base64');
+  // const objBuffer = new Buffer.from(await fillBuffer(req, res));
+  const objBuffer = new Buffer.from(await fillBuffer(req, res), 'base64');
 
-  //let counter = 0;
   const params = [uuid, 1, 'small_file.jpeg', objBuffer.length, date, time, objBuffer];
 
   client.execute(upsertFile, params, { prepare: true }, (err, result) => {
