@@ -1,5 +1,5 @@
 const getCurrTimeConsole = require('../lib/debuggingTools/getCurrentTime/console');
-const getCurrtDateOrigin = require('../lib/debuggingTools/getCurrentDate/original');
+const getCurrDateOrigin = require('../lib/debuggingTools/getCurrentDate/original');
 
 const asyncForEach = require('../lib/asyncForEach/index');
 
