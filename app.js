@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const getCurrentTime = require('./lib/debuggingTools/getCurrentTime/with_brackets');
+const getCurrTimeConsole = require('./lib/debuggingTools/getCurrentTime/console');
 
 const express = require('express');
 
@@ -19,6 +19,6 @@ app.use('/', routes);
 app.use('/api/files', files);
 
 app.listen(process.env.PORT, process.env.HOST);
-console.log(getCurrentTime() + 'Server started on port ' + process.env.PORT);
+console.log(getCurrTimeConsole() + 'Server started on port ' + process.env.PORT);
 
 module.exports = app;

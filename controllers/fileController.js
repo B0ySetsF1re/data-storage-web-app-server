@@ -1,5 +1,5 @@
-const getCurrentTime = require('../lib/debuggingTools/getCurrentTime/with_brackets');
-const getCurrentDate = require('../lib/debuggingTools/getCurrentDate/without_brackets');
+const getCurrTimeConsole = require('../lib/debuggingTools/getCurrentTime/console');
+const getCurrtDateOrigin = require('../lib/debuggingTools/getCurrentDate/original');
 
 const asyncForEach = require('../lib/asyncForEach/index');
 
@@ -15,7 +15,7 @@ client.connect((err, result) => {
   if(err) {
     console.log(err);
   }
-  console.log(getCurrentTime() + 'API: cassandra connected');
+  console.log(getCurrTimeConsole() + 'API: cassandra connected');
 });
 
 const uploadFile = (req, res) => {
