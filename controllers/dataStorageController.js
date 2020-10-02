@@ -37,7 +37,7 @@ client.connect()
     return client.shutdown().then(() => { throw err; });
   });
 
-const uploadFile = (req, res) => {
+const uploadFile = async (req, res) => {
   const uuid = cassandra.types.uuid();
   const date = cassandra.types.LocalDate.now();
   const time = cassandra.types.LocalTime.now();
@@ -69,7 +69,7 @@ const uploadFile = (req, res) => {
   });
 }
 
-const uploadFileChunks = (req, res) => {
+const uploadFileChunks = async (req, res) => {
   const uuid = cassandra.types.uuid();
   const date = cassandra.types.LocalDate.now();
 
