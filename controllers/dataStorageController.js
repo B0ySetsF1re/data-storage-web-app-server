@@ -22,14 +22,14 @@ const upsertFile = 'INSERT INTO ' + process.env.DB_KEYSPACE +
 
 client.connect()
   .then(() => {
-    console.log(getCurrTimeConsole() + 'API: keyspace initiation performed');
     return client.execute(createKeySpaceIfNotExists);
   })
   .then(() => {
-    console.log(getCurrTimeConsole() + 'API: table initiation performed');
+    console.log(getCurrTimeConsole() + 'API: keyspace initiation performed');
     return client.execute(createTableIfNotExists);
   })
   .then(() => {
+    console.log(getCurrTimeConsole() + 'API: table initiation performed');
     console.log(getCurrTimeConsole() + 'API: cassandra connected');
   })
   .catch((err) => {
