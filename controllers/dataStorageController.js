@@ -71,6 +71,7 @@ const uploadFileChunks = (req, res) => {
 
   stream.on('data', (data) => {
     const objBuffer = new Buffer.from(data, 'base64');
+    // const objBuffer = new Buffer.alloc(Buffer.byteLength(content, 'base64'), content, 'base64');
     const params = [uuid, counter++, 'big_file.jpg', Buffer.byteLength(content, 'base64'), date, time, objBuffer];
 
     client.execute(upsertFile, params, { prepare: true }, (err, result) => {
