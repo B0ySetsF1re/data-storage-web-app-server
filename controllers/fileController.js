@@ -16,3 +16,14 @@ client.connect((err, result) => {
   }
   console.log(getCurrentTime() + 'API: cassandra connected');
 });
+
+const uploadFile = (req, res) => {
+
+}
+
+const uploadFileChunks = (req, res) => {
+
+}
+
+exports.uploadFile = uploadFile;
+exports.uploadFileChunks = uploadFileChunks;
