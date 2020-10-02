@@ -20,7 +20,16 @@ client.connect((err, result) => {
   console.log(getCurrTimeConsole() + 'API: cassandra connected');
 });
 
+const createTableIfNotExists = 'CREATE TABLE IF NOT EXISTS files (object_id uuid, chunk_id int, name text, size float, upload_date date, upload_time time, data blob, PRIMARY KEY(object_id, name, chunk_id))';
 const upsertFile = 'INSERT INTO files (object_id, chunk_id, name, size, upload_date, upload_time, data) VALUES (?, ?, ?, ?, ?, ?, ?)';
+
+client.execute(createTableIfNotExists, (err, result) => {
+  if(err) {
+    return console.log(err);
+  }
+
+  console.log(getCurrTimeConsole() + 'API: table initiation performed');
+});
 
 const uploadFile = (req, res) => {
   const uuid = cassandra.types.uuid();
