@@ -42,22 +42,28 @@ const uploadFile = (req, res) => {
   const date = cassandra.types.LocalDate.now();
   const time = cassandra.types.LocalTime.now();
 
-  const content = readFileSync(resolve(__dirname + '../../files/' + 'small_file.jpeg'), 'base64');
-  const objBuffer = new Buffer.from(content, 'base64');
-  // const objBuffer = new Buffer.alloc(Buffer.byteLength(content, 'base64'), content, 'base64');
+  let counter = 0;
 
-  const params = [uuid, 1, 'small_file.jpeg', Buffer.byteLength(content, 'base64'), date, time, objBuffer];
+  req.on('data', (data) => {
+    const objBuffer = new Buffer.from(data, 'base64');
+    // const content = readFileSync(resolve(__dirname + '../../files/' + 'small_file.jpeg'), 'base64');
+    // const objBuffer = new Buffer.from(content, 'base64');
+    // const objBuffer = new Buffer.alloc(Buffer.byteLength(content, 'base64'), content, 'base64');
 
-  client.execute(upsertFile, params, { prepare: true }, (err, result) => {
-    if(!err) {
-      console.log(getCurrTimeConsole() + 'File has been upploaded...');
-      //res.json({ 'status': 'uploaded' });
-      console.log({ 'status': 'uploaded' });
-    } else {
-      console.log(err)
-      //res.json({ 'status': 'Error uploading file!' });
-      console.log({ 'status': 'Error uploading file!' });
-    }
+    const params = [uuid, counter++, 'small_file.jpeg', Buffer.byteLength(objBuffer, 'base64'), date, time, objBuffer];
+
+    client.execute(upsertFile, params, { prepare: true }, (err, result) => {
+      if(!err) {
+        console.log(getCurrTimeConsole() + 'API: Chunk has been upploaded...');
+      } else {
+        console.log(err)
+      }
+    });
+  });
+
+  req.on('end', () => {
+    console.log(getCurrTimeConsole() + 'API: Stream ended...');
+    res.json({ 'status': 'File upload finished...' });
   });
 }
 
