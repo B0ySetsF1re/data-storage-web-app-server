@@ -1,5 +1,4 @@
 const getCurrTimeConsole = require('../lib/debuggingTools/getCurrentTime/console');
-const getCurrDateOrigin = require('../lib/debuggingTools/getCurrentDate/original');
 
 const asyncForEach = require('../lib/asyncForEach/index');
 
@@ -19,10 +18,14 @@ client.connect((err, result) => {
 });
 
 const uploadFile = (req, res) => {
+  const uuid = cassandra.types.uuid();
+  const date = cassandra.types.LocalDate.now()
 
 }
 
 const uploadFileChunks = (req, res) => {
+  const uuid = cassandra.types.uuid();
+  const date = cassandra.types.LocalDate.now()
 
 }
 
