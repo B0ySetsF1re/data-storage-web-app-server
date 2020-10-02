@@ -46,6 +46,7 @@ const uploadFile = (req, res) => {
 
   req.on('data', (data) => {
     const objBuffer = new Buffer.from(data, 'base64');
+    // const objBuffer = new Buffer.from(data.toString(), 'base64');
     // const content = readFileSync(resolve(__dirname + '../../files/' + 'small_file.jpeg'), 'base64');
     // const objBuffer = new Buffer.from(content, 'base64');
     // const objBuffer = new Buffer.alloc(Buffer.byteLength(content, 'base64'), content, 'base64');
