@@ -42,7 +42,7 @@ const fillBuffer = async (req, res) => {
     let buffer = '';
 
     req.on('data', data => {
-      buffer += data.toString();
+      buffer += data.toString('base64');
     });
 
     req.on('end', () => {
