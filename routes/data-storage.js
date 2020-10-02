@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const fileController = require('../controllers/dataStorageController');
+const dataStorageController = require('../controllers/dataStorageController');
+const { Readable } = require('stream');
 
-router.post('/upload-file', (req, res) => {
-
-});
+router.post('/upload-file', dataStorageController.uploadFile);
 
 module.exports = router;
