@@ -29,6 +29,9 @@ client.connect()
     console.log(getCurrTimeConsole() + 'API: table initiation performed');
     return client.execute(createTableIfNotExists);
   })
+  .then(() => {
+    console.log(getCurrTimeConsole() + 'API: cassandra connected');
+  })
   .catch((err) => {
     console.error('There was an error', err);
     return client.shutdown().then(() => { throw err; });
