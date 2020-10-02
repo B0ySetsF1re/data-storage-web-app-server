@@ -1,4 +1,4 @@
-const getCurrentTime = require('../lib/debuggingTools/getCurrentTime/index');
+const getCurrentTime = require('../lib/debuggingTools/getCurrentTime/with_brackets');
 const getCurrentDate = require('../lib/debuggingTools/getCurrentDate/without_brackets');
 
 const asyncForEach = require('../lib/asyncForEach/index');

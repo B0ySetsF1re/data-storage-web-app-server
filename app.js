@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const getCurrentTime = require('./lib/debuggingTools/getCurrentTime/index');
+const getCurrentTime = require('./lib/debuggingTools/getCurrentTime/with_brackets');
 
 const express = require('express');
 
