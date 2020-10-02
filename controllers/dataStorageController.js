@@ -9,27 +9,30 @@ const cassandra = require('cassandra-driver');
 
 const client = new cassandra.Client({
   contactPoints: [process.env.HOST],
-  keyspace: process.env.DB_KEYSPACE,
+  //keyspace: process.env.DB_KEYSPACE,
   localDataCenter: process.env.DB_DATACENTER
 });
 
-client.connect((err, result) => {
-  if(err) {
-    console.log(err);
-  }
-  console.log(getCurrTimeConsole() + 'API: cassandra connected');
-});
+const createKeySpaceIfNotExists = 'CREATE KEYSPACE IF NOT EXISTS ' + process.env.DB_KEYSPACE +
+      ' WITH replication = {\'class\': \'SimpleStrategy\', \'replication_factor\': 3}';
+const createTableIfNotExists = 'CREATE TABLE IF NOT EXISTS ' + process.env.DB_KEYSPACE +
+    '.files (object_id uuid, chunk_id int, name text, size float, upload_date date, upload_time time, data blob, PRIMARY KEY(object_id, name, chunk_id))';
+const upsertFile = 'INSERT INTO ' + process.env.DB_KEYSPACE +
+    '.files (object_id, chunk_id, name, size, upload_date, upload_time, data) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
-const createTableIfNotExists = 'CREATE TABLE IF NOT EXISTS files (object_id uuid, chunk_id int, name text, size float, upload_date date, upload_time time, data blob, PRIMARY KEY(object_id, name, chunk_id))';
-const upsertFile = 'INSERT INTO files (object_id, chunk_id, name, size, upload_date, upload_time, data) VALUES (?, ?, ?, ?, ?, ?, ?)';
-
-client.execute(createTableIfNotExists, (err, result) => {
-  if(err) {
-    return console.log(err);
-  }
-
-  console.log(getCurrTimeConsole() + 'API: table initiation performed');
-});
+client.connect()
+  .then(() => {
+    console.log(getCurrTimeConsole() + 'API: keyspace initiation performed');
+    return client.execute(createKeySpaceIfNotExists);
+  })
+  .then(() => {
+    console.log(getCurrTimeConsole() + 'API: table initiation performed');
+    return client.execute(createTableIfNotExists);
+  })
+  .catch((err) => {
+    console.error('There was an error', err);
+    return client.shutdown().then(() => { throw err; });
+  });
 
 const uploadFile = (req, res) => {
   const uuid = cassandra.types.uuid();
