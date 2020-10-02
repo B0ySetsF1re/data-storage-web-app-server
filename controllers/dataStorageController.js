@@ -37,35 +37,43 @@ client.connect()
     return client.shutdown().then(() => { throw err; });
   });
 
+const fillBuffer = async (req, res) => {
+  return new Promise((resolve) => {
+    let buffer = '';
+
+    req.on('data', data => {
+      buffer += data.toString();
+    });
+
+    req.on('end', () => {
+      resolve(buffer);
+    });
+  });
+}
+
 const uploadFile = async (req, res) => {
   const uuid = cassandra.types.uuid();
   const date = cassandra.types.LocalDate.now();
   const time = cassandra.types.LocalTime.now();
 
-  let counter = 0;
+  const objBuffer = new Buffer.from(await fillBuffer(req, res));
+  // const objBufferLength = Buffer.byteLength(objBuffer);
+  // const objBuffer = new Buffer.from(data.toString(), 'base64');
+  // const content = readFileSync(resolve(__dirname + '../../files/' + 'small_file.jpeg'), 'base64');
+  // const objBuffer = new Buffer.from(content, 'base64');
+  // const objBuffer = new Buffer.alloc(Buffer.byteLength(content, 'base64'), content, 'base64');
 
-  req.on('data', (data) => {
-    const objBufferLength = Buffer.byteLength(data);
-    const objBuffer = new Buffer.from(data, 'base64');
-    // const objBuffer = new Buffer.from(data.toString(), 'base64');
-    // const content = readFileSync(resolve(__dirname + '../../files/' + 'small_file.jpeg'), 'base64');
-    // const objBuffer = new Buffer.from(content, 'base64');
-    // const objBuffer = new Buffer.alloc(Buffer.byteLength(content, 'base64'), content, 'base64');
+  //let counter = 0;
+  const params = [uuid, 1, 'small_file.jpeg', objBuffer.length, date, time, objBuffer];
 
-    const params = [uuid, counter++, 'small_file.jpeg', objBufferLength, date, time, objBuffer];
-
-    client.execute(upsertFile, params, { prepare: true }, (err, result) => {
-      if(!err) {
-        console.log(getCurrTimeConsole() + 'API: Chunk has been upploaded... Chunk size is: ' + objBufferLength);
-      } else {
-        console.log(err)
-      }
-    });
-  });
-
-  req.on('end', () => {
-    console.log(getCurrTimeConsole() + 'API: Stream ended...');
-    res.json({ 'status': 'File upload finished...' });
+  client.execute(upsertFile, params, { prepare: true }, (err, result) => {
+    if(!err) {
+      console.log(getCurrTimeConsole() + 'API: Chunk has been upploaded... Chunk size is: ' + objBuffer.length);
+      res.json({ 'status': 'File upload finished...' });
+    } else {
+      console.log(err)
+      res.json({ 'status': 'Error uploading file!' });
+    }
   });
 }
 
@@ -107,3 +115,4 @@ const uploadFileChunks = async (req, res) => {
 
 exports.uploadFile = uploadFile;
 exports.uploadFileChunks = uploadFileChunks;
+exports.fillBuffer = fillBuffer;
