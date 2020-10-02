@@ -110,4 +110,3 @@ const uploadFileChunks = async (req, res) => {
 
 exports.uploadFile = uploadFile;
 exports.uploadFileChunks = uploadFileChunks;
-exports.fillBuffer = fillBuffer;
