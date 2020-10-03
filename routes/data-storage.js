@@ -5,11 +5,17 @@ const dataStorageController = require('../controllers/dataStorageController');
 router.get('/', (req, res) => {
   res.status(200).json({
     "APIs": {
-      "POST": {
-        "upload-file": "/api/data-storage/upload-file"
-      },
       "GET": {
-        "APIs main page" : "/api/data-storage"
+        "APIs-list" : "/api/data-storage",
+        "content": "/api-data-storage/content",
+        "space-info": "/api-data-storage/space-info",
+        "download-file": "/api-data-storage/download-file/:file-id",
+      },
+      "POST": {
+        "upload-file": "/api/data-storage/upload-file",
+        "upload-large-file": "/api-data-storage/upload-large-file/:file-id",
+        "rename-uploaded-file": "/api-data-storage/rename-uploaded-file/:file-id",
+        "delete-uploaded-file": "/api-data-storage/delete-uploaded-file/:file-id"
       }
     }
   });
