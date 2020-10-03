@@ -15,6 +15,30 @@ router.get('/', (req, res) => {
   });
 });
 
-router.post('/upload-file', dataStorageController.uploadFile);
+router.get('/content', (req, res) => {
+  res.json({ "status": "OK" });
+});
+
+router.get('/space-info', (req, res) => {
+  res.json({ "status": "OK" });
+});
+
+router.get('/download-file/:file-id', (req, res) => {
+  res.send('Download file request...');
+});
+
+router.post('/upload-file', dataStorageController.uploadFile);    // Less than 1MB
+
+router.post('/upload-large-file', (req, res) => {                 // More than 1MB
+  res.json({ "status": "OK" });
+});
+
+router.post('/rename-uploaded-file/:file-id', (req, res) => {
+  res.json({ "status": "OK" });
+});
+
+router.post('/delete-uploaded-file/:file-id', (req, res) => {
+  res.json({ "status": "OK" });
+});
 
 module.exports = router;

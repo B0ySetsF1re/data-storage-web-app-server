@@ -57,6 +57,7 @@ const uploadFile = async (req, res) => {
   const time = cassandra.types.LocalTime.now();
 
   // const objBuffer = new Buffer.from(await fillBuffer(req, res));
+  // const objBuffer = new Buffer.from((await fillBuffer(req, res)).toString('base64'), 'base64');
   const objBuffer = new Buffer.from(await fillBuffer(req, res), 'base64');
 
   const params = [uuid, 1, 'small_file.jpeg', objBuffer.length, date, time, objBuffer];
