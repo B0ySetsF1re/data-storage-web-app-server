@@ -7,15 +7,15 @@ router.get('/', (req, res) => {
     "APIs": {
       "GET": {
         "APIs-list" : "/api/data-storage",
-        "content": "/api-data-storage/content",
-        "space-info": "/api-data-storage/space-info",
-        "download-file": "/api-data-storage/download-file/:file-id",
+        "content": "/api/data-storage/content",
+        "space-info": "/api/data-storage/space-info",
+        "download-file": "/api/data-storage/download-file/:id",
       },
       "POST": {
         "upload-file": "/api/data-storage/upload-file",
-        "upload-large-file": "/api-data-storage/upload-large-file/:file-id",
-        "rename-uploaded-file": "/api-data-storage/rename-uploaded-file/:file-id",
-        "delete-uploaded-file": "/api-data-storage/delete-uploaded-file/:file-id"
+        "upload-large-file": "/api/data-storage/upload-large-file/:id",
+        "rename-uploaded-file": "/api/data-storage/rename-uploaded-file/:id",
+        "delete-uploaded-file": "/api/data-storage/delete-uploaded-file/:id"
       }
     }
   });
@@ -29,7 +29,7 @@ router.get('/space-info', (req, res) => {
   res.json({ "status": "OK" });
 });
 
-router.get('/download-file/:file-id', (req, res) => {
+router.get('/download-file/:id', (req, res) => {
   res.send('Download file request...');
 });
 
@@ -39,11 +39,11 @@ router.post('/upload-large-file', (req, res) => {                 // More than 1
   res.json({ "status": "OK" });
 });
 
-router.post('/rename-uploaded-file/:file-id', (req, res) => {
+router.post('/rename-uploaded-file/:id', (req, res) => {
   res.json({ "status": "OK" });
 });
 
-router.post('/delete-uploaded-file/:file-id', (req, res) => {
+router.post('/delete-uploaded-file/:id', (req, res) => {
   res.json({ "status": "OK" });
 });
 
