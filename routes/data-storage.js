@@ -4,7 +4,7 @@ const dataStorageController = require('../controllers/dataStorageController');
 const { Readable } = require('stream');
 
 router.get('/', (req, res) => {
-  res.json({
+  res.status(200).json({
     "APIs": {
       "POST": {
         "upload-file": "/api/data-storage/upload-file"
