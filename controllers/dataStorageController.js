@@ -5,7 +5,7 @@ const multiparty = require('multiparty');
 const contentDisposition = require('content-disposition');
 
 const cassandra = require('cassandra-driver');
-const UnderscoreCqlToCamelCaseMappings = cassandra.mapping.UnderscoreCqlToCamelCaseMappings;
+const DefaultTableMappings = cassandra.mapping.DefaultTableMappings;
 const queries = require('../models/dataStorageQueriesModel');
 
 const client = new cassandra.Client({
@@ -54,7 +54,7 @@ const mappingOptions = {
   models: {
     'fileMetaData': {
       tables: ['files_metadata'],
-      mappings: new UnderscoreCqlToCamelCaseMappings()
+      mappings: new DefaultTableMappings()
       }
     }
   }
@@ -205,12 +205,17 @@ const downloadFile = async (req, res) => {
 }
 
 const getFilesMetaDataContent = async (req, res) => {
-  client.execute(queries.selectAllMetaDataContent)
-    .then(async content => {
-      let formatedContent = [];
+  let content = await fileMetaDataMapper.findAll()
+  .catch(err => {
+    console.error('There was an error', err);
+    res.status(404).json({ 'status': 'Error requesting content meta data page!' });
+  });
 
-      await asyncForEach(content.rows, async (row) => {
-        formatedContent.push({
+  let formattedContent = [];
+
+  await asyncForEach(content.toArray(), async (row) => {
+    console.log(row);
+    formattedContent.push({
           object_id: row.object_id.toString(),
           file_name: row.file_name,
           length: row.length.toString(),
@@ -218,17 +223,8 @@ const getFilesMetaDataContent = async (req, res) => {
           upload_date: row.upload_date,
           upload_time: row.upload_time
         });
-      });
-
-      return formatedContent;
-    })
-    .then(content => {
-      res.send(JSON.stringify(content));
-    })
-    .catch(err => {
-      console.error('There was an error', err);
-      res.status(404).json({ 'status': 'Error requesting content meta data page!' });
-    });
+  });
+  res.status(200).send(JSON.stringify(formattedContent));
 }
 
 exports.uploadFile = uploadFile;
