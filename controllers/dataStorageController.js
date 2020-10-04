@@ -61,6 +61,7 @@ const getMultiPartFrmData = async (req, res) => {
     });
 
     form.on('part', part => {
+      fileDataObj.headers = part.headers;
       fileDataObj.fieldname = part.name;
       fileDataObj.filename = part.filename;
       fileDataObj.byteCount = part.byteCount;
