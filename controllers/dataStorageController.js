@@ -24,9 +24,9 @@ const crateFilesDataTable = 'CREATE TABLE IF NOT EXISTS ' + process.env.DB_KEYSP
     '.files_data (object_id uuid, chunk_id int, data blob, PRIMARY KEY(object_id, chunk_id))';
 
 const upsertFile = 'INSERT INTO ' + process.env.DB_KEYSPACE +
-    '.files (object_id, chunk_id, name, size, upload_date, upload_time, data) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    '.files_data (object_id, chunk_id, name, size, upload_date, upload_time, data) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
-const selectFileFromTable = 'SELECT object_id, chunk_id, data FROM ' + process.env.DB_KEYSPACE + '.files WHERE object_id = ?';
+const selectFileFromTable = 'SELECT object_id, chunk_id, data FROM ' + process.env.DB_KEYSPACE + '.files_data WHERE object_id = ?';
 
 client.connect()
   .then(() => {
