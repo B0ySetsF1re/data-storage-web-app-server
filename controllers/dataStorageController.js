@@ -18,13 +18,13 @@ const createKeySpace = 'CREATE KEYSPACE IF NOT EXISTS ' + process.env.DB_KEYSPAC
       ' WITH replication = {\'class\': \'SimpleStrategy\', \'replication_factor\': 3}';
 
 const createFilesMetaDataTable = 'CREATE TABLE IF NOT EXISTS ' + process.env.DB_KEYSPACE +
-    '.files_metadata (object_id uuid, file_name text, disposition text, type text, size double, upload_date date, upload_time time, PRIMARY KEY(object_id, file_name))';
+    '.files_metadata (object_id uuid, file_name text, disposition text, type text, length double, upload_date date, upload_time time, PRIMARY KEY(object_id, file_name))';
 
 const crateFilesDataTable = 'CREATE TABLE IF NOT EXISTS ' + process.env.DB_KEYSPACE +
     '.files_data (object_id uuid, chunk_id int, data blob, PRIMARY KEY(object_id, chunk_id))';
 
 const upsertFileMetaData = 'INSERT INTO ' + process.env.DB_KEYSPACE +
-    '.files_metadata (object_id, file_name, disposition, type, size, upload_date, upload_time) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    '.files_metadata (object_id, file_name, disposition, type, length, upload_date, upload_time) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
 const upsertFileData = 'INSERT INTO ' + process.env.DB_KEYSPACE +
     '.files_data (object_id, chunk_id, data) VALUES (?, ?, ?)';
@@ -146,7 +146,7 @@ const downloadFile = async (req, res) => {
           res.set({
             'Cache-Control': 'no-cache',
             'Content-Type': fileMetaData.type,
-            'Content-Length': fileMetaData.size,
+            'Content-Length': fileMetaData.length,
             'Content-Disposition': fileMetaData.disposition
           });
 
