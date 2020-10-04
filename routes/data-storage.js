@@ -14,7 +14,6 @@ router.get('/', (req, res) => {
       },
       "POST": {
         "upload-file": "/api/data-storage/upload-file",
-        "upload-large-file": "/api/data-storage/upload-large-file/:id",
         "rename-uploaded-file": "/api/data-storage/rename-uploaded-file/:id",
         "delete-uploaded-file": "/api/data-storage/delete-uploaded-file/:id"
       }
@@ -32,11 +31,7 @@ router.get('/space-info', (req, res) => {
 
 router.get('/download-file/:id', dataStorageController.downloadFile);
 
-router.post('/upload-file', dataStorageController.uploadFile);    // Less than 1MB
-
-router.post('/upload-large-file', (req, res) => {                 // More than 1MB
-  res.json({ "status": "OK" });
-});
+router.post('/upload-file', dataStorageController.uploadFile);
 
 router.post('/rename-uploaded-file/:id', (req, res) => {
   res.json({ "status": "OK" });
