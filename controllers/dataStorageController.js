@@ -5,10 +5,12 @@ const multiparty = require('multiparty');
 const contentDisposition = require('content-disposition');
 
 const cassandra = require('cassandra-driver');
+const Client = cassandra.Client;
+const Mapper = cassandra.mapping.Mapper;
 const DefaultTableMappings = cassandra.mapping.DefaultTableMappings;
 const queries = require('../models/dataStorageQueriesModel');
 
-const client = new cassandra.Client({
+const client = new Client({
   contactPoints: [process.env.HOST],
   //keyspace: process.env.DB_KEYSPACE,
   localDataCenter: process.env.DB_DATACENTER
@@ -35,7 +37,7 @@ client.connect()
     return client.shutdown().then(() => { throw err; });
   });
 
-const mapperClient = new cassandra.Client({
+const mapperClient = new Client({
   contactPoints: [process.env.HOST],
   keyspace: process.env.DB_KEYSPACE,
   localDataCenter: process.env.DB_DATACENTER
@@ -59,7 +61,7 @@ const mappingOptions = {
     }
   }
 
-const mapper = new cassandra.mapping.Mapper(mapperClient, mappingOptions);
+const mapper = new Mapper(mapperClient, mappingOptions);
 const fileMetaDataMapper = mapper.forModel('fileMetaData');
 
 
