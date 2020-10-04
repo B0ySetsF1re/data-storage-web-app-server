@@ -17,9 +17,6 @@ const client = new cassandra.Client({
 const createKeySpace = 'CREATE KEYSPACE IF NOT EXISTS ' + process.env.DB_KEYSPACE +
       ' WITH replication = {\'class\': \'SimpleStrategy\', \'replication_factor\': 3}';
 
-const createTableIfNotExists = 'CREATE TABLE IF NOT EXISTS ' + process.env.DB_KEYSPACE +
-    '.files (object_id uuid, chunk_id int, name text, size float, upload_date date, upload_time time, data blob, PRIMARY KEY(object_id, name, chunk_id))';
-
 const createFilesMetaDataTable = 'CREATE TABLE IF NOT EXISTS ' + process.env.DB_KEYSPACE +
     '.files_metadata (object_id uuid, name text, disposition text, type text, size double, upload_date date, upload_time time, PRIMARY KEY(object_id, name))';
 
