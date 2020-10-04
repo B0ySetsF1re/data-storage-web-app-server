@@ -3,6 +3,7 @@ const asyncForEach = require('../lib/asyncForEach/index');
 
 const multiparty = require('multiparty');
 const contentDisposition = require('content-disposition');
+const niceBytes = require('nice-bytes');
 
 const cassandra = require('cassandra-driver');
 const Client = cassandra.Client;
@@ -216,11 +217,10 @@ const getFilesMetaDataContent = async (req, res) => {
   let formattedContent = [];
 
   await asyncForEach(content.toArray(), async (row) => {
-    console.log(row);
     formattedContent.push({
           object_id: row.object_id.toString(),
           file_name: row.file_name,
-          length: row.length.toString(),
+          length: niceBytes(row.length).text,
           type: row.type,
           upload_date: row.upload_date,
           upload_time: row.upload_time
