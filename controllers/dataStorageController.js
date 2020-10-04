@@ -111,10 +111,8 @@ const uploadFile = async (req, res) => {
   // const objBuffer = new Buffer.from(await fillBuffer(req, res));
   // const objBuffer = new Buffer.from((await fillBuffer(req, res)).toString('base64'), 'base64');
   const fileDataObj = await getMultiPartFrmData(req, res);
-  const bufferObj = fileDataObj.buffer; // this var might not needed
                                         // however it is needed if we would like to specify encoding
   const fileMetaDataQueryParams = [uuid, fileDataObj.filename, fileDataObj.disposition, fileDataObj.type, fileDataObj.byteCount, date, time];
-  const fileDataQueryParams = [uuid, 1, bufferObj];
 
   client.execute(upsertFileMetaData, fileMetaDataQueryParams, { prepare: true }, (err, result) => {
     if(!err) {
@@ -126,15 +124,36 @@ const uploadFile = async (req, res) => {
     }
   });
 
-  client.execute(upsertFileData, fileDataQueryParams, { prepare: true }, (err, result) => {
-    if(!err) {
-      console.log(getCurrTimeConsole() + 'API: File has been uploaded... File size is: ' + fileDataObj.byteCount);
-      res.json({ 'status': 'File upload finished...' });
-    } else {
-      console.log(err)
-      res.json({ 'status': 'Error uploading file!' });
-    }
-  });
+  if(fileDataObj.buffer) {
+    const bufferObj = fileDataObj.buffer; // this var might not needed
+                                          // however it is needed if we would like to specify encoding (same for chunks in else statement below)
+    const fileDataQueryParams = [uuid, 0, bufferObj];
+
+    client.execute(upsertFileData, fileDataQueryParams, { prepare: true }, (err, result) => {
+      if(!err) {
+        console.log(getCurrTimeConsole() + 'API: File has been uploaded... File size is: ' + fileDataObj.byteCount);
+        res.json({ 'status': 'File upload finished...' });
+      } else {
+        console.log(err)
+        res.json({ 'status': 'Error uploading file!' });
+      }
+    });
+
+  } else if(fileDataObj.chunks) {
+    fileDataObj.chunks.forEach((chunk, chunk_id) {
+
+      client.execute(upsertFileData, [uuid, chunk_id, chunk], { prepare: true }, (err, result) => {
+        if(!err) {
+          console.log(getCurrTimeConsole() + 'API: File has been uploaded... File size is: ' + fileDataObj.byteCount);
+          res.json({ 'status': 'File upload finished...' });
+        } else {
+          console.log(err)
+          res.json({ 'status': 'Error uploading file!' });
+        }
+      });
+
+    });
+  }
 }
 
 const downloadFile = async (req, res) => {
