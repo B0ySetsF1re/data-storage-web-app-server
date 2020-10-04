@@ -1,8 +1,9 @@
 const getCurrTimeConsole = require('../lib/debuggingTools/getCurrentTime/console');
 const asyncForEach = require('../lib/asyncForEach/index');
 
-
 const multiparty = require('multiparty');
+const contentDisposition = require('content-disposition');
+
 const cassandra = require('cassandra-driver');
 const queries = require('../models/dataStorageQueriesModel');
 
@@ -89,7 +90,9 @@ const setFileHeaderBeforeSend = async (fileMetaData) => {
     'Cache-Control': 'no-cache',
     'Content-Type': fileMetaData.type,
     'Content-Length': fileMetaData.length,
-    'Content-Disposition': fileMetaData.disposition}
+    'Content-Disposition': !/^[ -~\t\n\r]+$/.test(fileMetaData.disposition)
+                          ? contentDisposition(fileMetaData.file_name) : fileMetaData.disposition
+  }
 }
 
 const uploadFile = async (req, res) => {
