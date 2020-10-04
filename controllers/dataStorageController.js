@@ -76,9 +76,13 @@ const getMultiPartFrmData = async (req, res) => {
     });
 
     form.on('close', () => {
-      fileDataObj.buffer = Buffer.concat(chunks);
-
-      resolve(fileDataObj);
+      if(fileDataObj.byteCount > 1048576) {
+        fileDataObj.chunks = chunks;
+        resolve(fileDataObj);
+      } else {
+        fileDataObj.buffer = Buffer.concat(chunks);
+        resolve(fileDataObj);
+      }
     });
 
     form.parse(req);
