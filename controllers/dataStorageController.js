@@ -121,7 +121,7 @@ const uploadFile = async (req, res) => {
       })
       .catch(err => {
         console.log(err);
-        res.json({ 'status': 'Error uploading file!' });
+        res.status(404).json({ 'status': 'Error uploading file!' });
       });
 
   } else {
@@ -133,7 +133,7 @@ const uploadFile = async (req, res) => {
         })
         .catch(err => {
           console.log(err);
-          res.json({ 'status': 'Error uploading file!' });
+          res.status(404).json({ 'status': 'Error uploading file!' });
         });
     });
     res.json({ 'status': 'File upload finished...' });
@@ -171,7 +171,7 @@ const downloadFile = async (req, res) => {
     })
     .catch(err => {
       console.error('There was an error', err);
-      res.status(404).send(err);
+      res.status(404).json({ 'status': 'Error downloading file!' });
     });
 }
 
