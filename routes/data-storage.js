@@ -22,9 +22,7 @@ router.get('/', (req, res) => {
   });
 });
 
-router.get('/content-meta-data', (req, res) => {
-  res.json({ "status": "OK" });
-});
+router.get('/content-meta-data', dataStorageController.getFilesMetaDataContent);
 
 router.get('/space-info', (req, res) => {
   res.json({ "status": "OK" });

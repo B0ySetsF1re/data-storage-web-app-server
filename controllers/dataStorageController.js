@@ -204,5 +204,33 @@ const downloadFile = async (req, res) => {
     });
 }
 
+const getFilesMetaDataContent = async (req, res) => {
+  client.execute(queries.selectAllMetaDataContent)
+    .then(async content => {
+      let formatedContent = [];
+
+      await asyncForEach(content.rows, async (row) => {
+        formatedContent.push({
+          object_id: row.object_id.toString(),
+          file_name: row.file_name,
+          length: row.length.toString(),
+          type: row.type,
+          upload_date: row.upload_date,
+          upload_time: row.upload_time
+        });
+      });
+
+      return formatedContent;
+    })
+    .then(content => {
+      res.send(JSON.stringify(content));
+    })
+    .catch(err => {
+      console.error('There was an error', err);
+      res.status(404).json({ 'status': 'Error requesting content meta data page!' });
+    });
+}
+
 exports.uploadFile = uploadFile;
 exports.downloadFile = downloadFile;
+exports.getFilesMetaDataContent = getFilesMetaDataContent;
