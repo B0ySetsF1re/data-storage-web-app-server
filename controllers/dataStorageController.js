@@ -229,6 +229,21 @@ const getFilesMetaDataContent = async (req, res) => {
   res.status(200).send(JSON.stringify(formattedContent));
 }
 
+const getAllUniqueFileTypes = async () => {
+  let typesCollected = [];
+
+  await client.execute('SELECT type FROM data_storage.files_metadata')
+    .then(async types => {
+      console.log(types);
+    });
+
+  console.log(typesCollected);
+}
+
+const getFilesDataStats = async (req, res) => {
+
+}
+
 exports.uploadFile = uploadFile;
 exports.downloadFile = downloadFile;
 exports.getFilesMetaDataContent = getFilesMetaDataContent;
