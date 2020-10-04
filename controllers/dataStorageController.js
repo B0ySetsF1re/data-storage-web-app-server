@@ -109,11 +109,22 @@ const uploadFile = async (req, res) => {
   const fileDataObj = await getMultiPartFrmData(req, res);
   const bufferObj = fileDataObj.buffer; // this var might not needed
                                         // however it is needed if we would like to specify encoding
-  const params = [uuid, 1, fileDataObj.filename, bufferObj.length, date, time, bufferObj];
+  const fileMetaDataQueryParams = [uuid, fileDataObj.filename, fileDataObj.disposition, fileDataObj.type, fileDataObj.byteCount, date, time];
+  const fileDataQueryParams = [uuid, 1, bufferObj];
 
-  client.execute(upsertFile, params, { prepare: true }, (err, result) => {
+  client.execute(upsertFileMetaData, fileMetaDataQueryParams, { prepare: true }, (err, result) => {
     if(!err) {
-      console.log(getCurrTimeConsole() + 'API: File has been upploaded... Chunk size is: ' + bufferObj.length);
+      console.log(getCurrTimeConsole() + 'API: File meta data has been upploaded...');
+      //res.json({ 'status': 'File meta data upload finished...' });
+    } else {
+      console.log(err)
+      //res.json({ 'status': 'Error uploading file meta data!' });
+    }
+  });
+
+  client.execute(upsertFileData, fileDataQueryParams, { prepare: true }, (err, result) => {
+    if(!err) {
+      console.log(getCurrTimeConsole() + 'API: File has been uploaded... File size is: ' + fileDataObj.byteCount);
       res.json({ 'status': 'File upload finished...' });
     } else {
       console.log(err)
@@ -123,7 +134,7 @@ const uploadFile = async (req, res) => {
 }
 
 const downloadFile = async (req, res) => {
-  client.execute(selectFileFromTable, [req.params.id], (err, result) => {
+  client.execute(selectFileChunks, [req.params.id], (err, result) => {
     //res.write(result.rows[0].data, 'binary');
     //res.end(null, 'binary');
     res.send(result.rows[0].data);
