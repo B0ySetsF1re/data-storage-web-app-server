@@ -29,7 +29,7 @@ const upsertFileMetaData = 'INSERT INTO ' + process.env.DB_KEYSPACE +
 const upsertFileData = 'INSERT INTO ' + process.env.DB_KEYSPACE +
     '.files_data (object_id, chunk_id, data) VALUES (?, ?, ?)';
 
-const selectFileFromTable = 'SELECT object_id, chunk_id, data FROM ' + process.env.DB_KEYSPACE + '.files_data WHERE object_id = ?';
+const selectFileChunks = 'SELECT object_id, chunk_id, data FROM ' + process.env.DB_KEYSPACE + '.files_data WHERE object_id = ?';
 
 client.connect()
   .then(() => {
