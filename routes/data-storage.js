@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
       "GET": {
         "APIs-list" : "/api/data-storage",
         "meta-data-content": "/api/data-storage/meta-data-content",
-        "space-info": "/api/data-storage/space-info",
+        "files-stats": "/api/data-storage/files-stats",
         "download-file": "/api/data-storage/download-file/:id",
       },
       "POST": {
@@ -24,7 +24,7 @@ router.get('/', (req, res) => {
 
 router.get('/meta-data-content', dataStorageController.getFilesMetaDataContent);
 
-router.get('/space-info', (req, res) => {
+router.get('/files-stats', (req, res) => {
   res.json({ "status": "OK" });
 });
 
