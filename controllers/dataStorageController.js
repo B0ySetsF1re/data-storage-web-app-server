@@ -116,7 +116,7 @@ const uploadFile = async (req, res) => {
 
   client.execute(upsertFileMetaData, fileMetaDataQueryParams, { prepare: true }, (err, result) => {
     if(!err) {
-      console.log(getCurrTimeConsole() + 'API: File meta data has been upploaded...');
+      console.log(getCurrTimeConsole() + 'API: File meta data has been uploaded...');
       //res.json({ 'status': 'File meta data upload finished...' });
     } else {
       console.log(err)
@@ -124,7 +124,7 @@ const uploadFile = async (req, res) => {
     }
   });
 
-  if(fileDataObj.buffer) {
+  if(fileDataObj.buffer != undefined) {
     const bufferObj = fileDataObj.buffer; // this var might not needed
                                           // however it is needed if we would like to specify encoding (same for chunks in else statement below)
     const fileDataQueryParams = [uuid, 0, bufferObj];
@@ -139,20 +139,20 @@ const uploadFile = async (req, res) => {
       }
     });
 
-  } else if(fileDataObj.chunks) {
-    fileDataObj.chunks.forEach((chunk, chunk_id) {
-
+  } else {
+    fileDataObj.chunks.forEach((chunk, chunk_id) => {
+      //console.log(chunk.length);
       client.execute(upsertFileData, [uuid, chunk_id, chunk], { prepare: true }, (err, result) => {
         if(!err) {
-          console.log(getCurrTimeConsole() + 'API: File has been uploaded... File size is: ' + fileDataObj.byteCount);
-          res.json({ 'status': 'File upload finished...' });
+          console.log(getCurrTimeConsole() + 'API: Chunk has been uploaded... Chunk size is: ' + fileDataObj.byteCount);
+
         } else {
           console.log(err)
-          res.json({ 'status': 'Error uploading file!' });
+          //res.json({ 'status': 'Error uploading file!' });
         }
       });
-
     });
+    res.json({ 'status': 'File upload finished...' });
   }
 }
 
@@ -163,17 +163,35 @@ const downloadFile = async (req, res) => {
     })
     .then(fileMetaData => {
       return client.execute(selectFileChunks, [req.params.id])
-        .then(chunks => {
-          res.status(200);
+        .then(async chunks => {
+          if(chunks.rowLength > 1) {
+            let extractedChunks = [];
+            await asyncForEach(chunks.rows, async (row) => {
+              extractedChunks.push(row.data);
+            });
 
-          res.set({
-            'Cache-Control': 'no-cache',
-            'Content-Type': fileMetaData.type,
-            'Content-Length': fileMetaData.length,
-            'Content-Disposition': fileMetaData.disposition
-          });
+            res.status(200);
 
-          res.send(chunks.first().data);
+            res.set({
+              'Cache-Control': 'no-cache',
+              'Content-Type': fileMetaData.type,
+              'Content-Length': fileMetaData.length,
+              'Content-Disposition': fileMetaData.disposition
+            });
+
+            res.send(Buffer.concat(extractedChunks));
+          } else {
+            res.status(200);
+
+            res.set({
+              'Cache-Control': 'no-cache',
+              'Content-Type': fileMetaData.type,
+              'Content-Length': fileMetaData.length,
+              'Content-Disposition': fileMetaData.disposition
+            });
+
+            res.send(chunks.first().data);
+          }
         });
     })
     .catch(err => {
