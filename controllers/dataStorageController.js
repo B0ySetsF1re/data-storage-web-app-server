@@ -5,6 +5,7 @@ const multiparty = require('multiparty');
 const contentDisposition = require('content-disposition');
 
 const cassandra = require('cassandra-driver');
+const UnderscoreCqlToCamelCaseMappings = cassandra.mapping.UnderscoreCqlToCamelCaseMappings;
 const queries = require('../models/dataStorageQueriesModel');
 
 const client = new cassandra.Client({
@@ -27,12 +28,40 @@ client.connect()
   })
   .then(() => {
     console.log(getCurrTimeConsole() + 'API: files data table initialization complete');
-    console.log(getCurrTimeConsole() + 'API: cassandra connected');
+    console.log(getCurrTimeConsole() + 'API: cassandra main client connected');
   })
   .catch((err) => {
     console.error('There was an error', err);
     return client.shutdown().then(() => { throw err; });
   });
+
+const mapperClient = new cassandra.Client({
+  contactPoints: [process.env.HOST],
+  keyspace: process.env.DB_KEYSPACE,
+  localDataCenter: process.env.DB_DATACENTER
+});
+
+mapperClient.connect()
+  .then(() => {
+    console.log(getCurrTimeConsole() + 'API: cassandra mapper client connected');
+  })
+  .catch((err) => {
+    console.error('There was an error', err);
+    return client.shutdown().then(() => { throw err; });
+  });
+
+const mappingOptions = {
+  models: {
+    'fileMetaData': {
+      tables: ['files_metadata'],
+      mappings: new UnderscoreCqlToCamelCaseMappings()
+      }
+    }
+  }
+
+const mapper = new cassandra.mapping.Mapper(mapperClient, mappingOptions);
+const fileMetaDataMapper = mapper.forModel('fileMetaData');
+
 
 const getMultiPartFrmData = async (req, res) => {
   return new Promise((resolve, reject) => {
