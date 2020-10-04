@@ -16,5 +16,7 @@ module.exports = {
 
   selectFileMetaData: 'SELECT * FROM ' + process.env.DB_KEYSPACE + '.files_metadata WHERE object_id = ?',
 
-  selectFileChunks: 'SELECT object_id, chunk_id, data FROM ' + process.env.DB_KEYSPACE + '.files_data WHERE object_id = ?'
+  selectFileChunks: 'SELECT object_id, chunk_id, data FROM ' + process.env.DB_KEYSPACE + '.files_data WHERE object_id = ?',
+
+  selectAllMetaDataContent: 'SELECT * FROM ' + process.env.DB_KEYSPACE + '.files_metadata'
 }
