@@ -19,6 +19,7 @@ const createTableIfNotExists = 'CREATE TABLE IF NOT EXISTS ' + process.env.DB_KE
     '.files (object_id uuid, chunk_id int, name text, size float, upload_date date, upload_time time, data blob, PRIMARY KEY(object_id, name, chunk_id))';
 const upsertFile = 'INSERT INTO ' + process.env.DB_KEYSPACE +
     '.files (object_id, chunk_id, name, size, upload_date, upload_time, data) VALUES (?, ?, ?, ?, ?, ?, ?)';
+const selectFileFromTable = 'SELECT object_id, chunk_id, data FROM ' + process.env.DB_KEYSPACE + '.files WHERE object_id = ?';
 
 client.connect()
   .then(() => {
@@ -73,6 +74,14 @@ const uploadFile = async (req, res) => {
   });
 }
 
+const getFile = async (req, res) => {
+  client.execute(selectFileFromTable, [req.params.id], (err, result) => {
+    res.write(result.rows[0].data, 'binary');
+    res.end(null, 'binary');
+    res.send('OK');
+  })
+}
+
 const uploadFileChunks = async (req, res) => {
   const uuid = cassandra.types.uuid();
   const date = cassandra.types.LocalDate.now();
@@ -111,3 +120,4 @@ const uploadFileChunks = async (req, res) => {
 
 exports.uploadFile = uploadFile;
 exports.uploadFileChunks = uploadFileChunks;
+exports.getFile = getFile;
