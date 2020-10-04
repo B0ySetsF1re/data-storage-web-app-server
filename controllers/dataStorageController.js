@@ -14,17 +14,17 @@ const client = new cassandra.Client({
   localDataCenter: process.env.DB_DATACENTER
 });
 
-const createKeySpaceIfNotExists = 'CREATE KEYSPACE IF NOT EXISTS ' + process.env.DB_KEYSPACE +
+const createKeySpace = 'CREATE KEYSPACE IF NOT EXISTS ' + process.env.DB_KEYSPACE +
       ' WITH replication = {\'class\': \'SimpleStrategy\', \'replication_factor\': 3}';
 
 const createTableIfNotExists = 'CREATE TABLE IF NOT EXISTS ' + process.env.DB_KEYSPACE +
     '.files (object_id uuid, chunk_id int, name text, size float, upload_date date, upload_time time, data blob, PRIMARY KEY(object_id, name, chunk_id))';
 
-const crateDataTable = 'CREATE TABLE IF NOT EXIST ' + process.env.DB_KEYSPACE +
-    '.files_data (object_id uuid, chunk_id int, data blob, PRIMARY KEY(object_id, chunk_id)) VALUES(?, ?, ?)';
+const createFilesMetaDataTable = 'CREATE TABLE IF NOT EXISTS ' + process.env.DB_KEYSPACE +
+    '.files_metadata (object_id uuid, name text, disposition text, type text, size double, upload_date date, upload_time time, PRIMARY KEY(object_id, name))';
 
-const createFileMetaDataTable = 'CREATE TABLE IF NOT EXISTS ' + process.env.DB_KEYSPACE +
-    '.files_metadata (object_id uuid, name text, disposition text, type text, size double, upload_date date, upload_time time, PRIMARY KEY(object_id, name)) VALUES(?, ?, ?, ?, ?, ?, ?)';
+const crateFilesDataTable = 'CREATE TABLE IF NOT EXISTS ' + process.env.DB_KEYSPACE +
+    '.files_data (object_id uuid, chunk_id int, data blob, PRIMARY KEY(object_id, chunk_id))';
 
 const upsertFile = 'INSERT INTO ' + process.env.DB_KEYSPACE +
     '.files (object_id, chunk_id, name, size, upload_date, upload_time, data) VALUES (?, ?, ?, ?, ?, ?, ?)';
@@ -33,14 +33,18 @@ const selectFileFromTable = 'SELECT object_id, chunk_id, data FROM ' + process.e
 
 client.connect()
   .then(() => {
-    return client.execute(createKeySpaceIfNotExists);
+    return client.execute(createKeySpace);
   })
   .then(() => {
-    console.log(getCurrTimeConsole() + 'API: keyspace initiation performed');
-    return client.execute(createTableIfNotExists);
+    console.log(getCurrTimeConsole() + 'API: keyspace initialization complete');
+    return client.execute(createFilesMetaDataTable);
   })
   .then(() => {
-    console.log(getCurrTimeConsole() + 'API: table initiation performed');
+    console.log(getCurrTimeConsole() + 'API: files metadata table initialization complete');
+    return client.execute(crateFilesDataTable);
+  })
+  .then(() => {
+    console.log(getCurrTimeConsole() + 'API: files data table initialization complete');
     console.log(getCurrTimeConsole() + 'API: cassandra connected');
   })
   .catch((err) => {
