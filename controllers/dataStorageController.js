@@ -84,6 +84,14 @@ const fillBuffer = async (req, res) => {
   });
 }
 
+const setFileHeaderBeforeSend = async (fileMetaData) => {
+  return {
+    'Cache-Control': 'no-cache',
+    'Content-Type': fileMetaData.type,
+    'Content-Length': fileMetaData.length,
+    'Content-Disposition': fileMetaData.disposition}
+}
+
 const uploadFile = async (req, res) => {
   const uuid = cassandra.types.uuid();
   const date = cassandra.types.LocalDate.now();
@@ -139,36 +147,28 @@ const downloadFile = async (req, res) => {
         .then(async chunks => {
           if(chunks.rowLength > 1) {
             let extractedChunks = [];
+
             await asyncForEach(chunks.rows, async (row) => {
               extractedChunks.push(row.data);
             });
 
             res.status(200);
+            res.set(await setFileHeaderBeforeSend(fileMetaData));
 
-            res.set({
-              'Cache-Control': 'no-cache',
-              'Content-Type': fileMetaData.type,
-              'Content-Length': fileMetaData.length,
-              'Content-Disposition': fileMetaData.disposition
-            });
-
+            console.log(getCurrTimeConsole() + 'API: File "' + fileMetaData.file_name + '" has been downloaded successfully...');
             res.send(Buffer.concat(extractedChunks));
           } else {
             res.status(200);
+            res.set(await setFileHeaderBeforeSend(fileMetaData));
 
-            res.set({
-              'Cache-Control': 'no-cache',
-              'Content-Type': fileMetaData.type,
-              'Content-Length': fileMetaData.length,
-              'Content-Disposition': fileMetaData.disposition
-            });
-
+            console.log(getCurrTimeConsole() + 'API: File "' + fileMetaData.file_name + '" has been downloaded successfully...');
             res.send(chunks.first().data);
           }
         });
     })
     .catch(err => {
       console.error('There was an error', err);
+      res.status(404).send(err);
     });
 }
 
