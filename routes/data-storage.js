@@ -4,6 +4,7 @@ const multiparty = require('multiparty');
 const dataStorageController = require('../controllers/dataStorageController');
 
 router.get('/', (req, res) => {
+  // res.setHeader('Content-Type', 'application/json');
   res.status(200).json({
     "APIs": {
       "GET": {
