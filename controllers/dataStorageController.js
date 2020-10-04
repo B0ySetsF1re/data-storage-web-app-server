@@ -4,6 +4,7 @@ const asyncForEach = require('../lib/asyncForEach/index');
 
 const { readFileSync, writeFile, createReadStream, CreateWriteStream } = require('fs');
 const { resolve } = require('path');
+const multiparty = require('multiparty');
 
 const cassandra = require('cassandra-driver');
 
@@ -37,6 +38,37 @@ client.connect()
     console.error('There was an error', err);
     return client.shutdown().then(() => { throw err; });
   });
+
+const collectDataFromMultprt = async (req, res) => {
+  return new Promise((resolve, reject) => {
+    let fileDataObj = {};
+    let chunks = [];
+
+    let form = new multiparty.Form();
+
+    form.on('error', err => {
+      reject(err);
+    });
+
+    form.on('part', part => {
+      fileDataObj.fieldname = part.name;
+      fileDataObj.filename = part.filename;
+      fileDataObj.byteCount = part.byteCount;
+
+      part.on('data', chunk => {
+        chunks.push(chunk);
+      });
+    });
+
+    form.on('close', () => {
+      fileDataObj.buffer = Buffer.concat(chunks);
+
+      resolve(fileDataObj);
+    });
+
+    form.parse(req);
+  });
+}
 
 const fillBuffer = async (req, res) => {
   return new Promise((resolve) => {
