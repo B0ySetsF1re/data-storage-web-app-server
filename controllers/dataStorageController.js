@@ -23,8 +23,11 @@ const createFilesMetaDataTable = 'CREATE TABLE IF NOT EXISTS ' + process.env.DB_
 const crateFilesDataTable = 'CREATE TABLE IF NOT EXISTS ' + process.env.DB_KEYSPACE +
     '.files_data (object_id uuid, chunk_id int, data blob, PRIMARY KEY(object_id, chunk_id))';
 
-const upsertFile = 'INSERT INTO ' + process.env.DB_KEYSPACE +
-    '.files_data (object_id, chunk_id, name, size, upload_date, upload_time, data) VALUES (?, ?, ?, ?, ?, ?, ?)';
+const upsertFileMetaData = 'INSERT INTO ' + process.env.DB_KEYSPACE +
+    '.files_metadata (object_id, file_name, disposition, type, size, upload_date, upload_time) VALUES (?, ?, ?, ?, ?, ?, ?)';
+
+const upsertFileData = 'INSERT INTO ' + process.env.DB_KEYSPACE +
+    '.files_data (object_id, chunk_id, data) VALUES (?, ?, ?)';
 
 const selectFileFromTable = 'SELECT object_id, chunk_id, data FROM ' + process.env.DB_KEYSPACE + '.files_data WHERE object_id = ?';
 
