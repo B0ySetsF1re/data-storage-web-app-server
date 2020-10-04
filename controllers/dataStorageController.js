@@ -134,11 +134,28 @@ const uploadFile = async (req, res) => {
 }
 
 const downloadFile = async (req, res) => {
-  client.execute(selectFileChunks, [req.params.id], (err, result) => {
-    //res.write(result.rows[0].data, 'binary');
-    //res.end(null, 'binary');
-    res.send(result.rows[0].data);
-  })
+  client.execute('SELECT * FROM ' + process.env.DB_KEYSPACE + '.files_metadata WHERE object_id = ' + req.params.id)
+    .then(fileMetaData => {
+      return fileMetaData.first();
+    })
+    .then(fileMetaData => {
+      return client.execute(selectFileChunks, [req.params.id])
+        .then(chunks => {
+          res.status(200);
+
+          res.set({
+            'Cache-Control': 'no-cache',
+            'Content-Type': fileMetaData.type,
+            'Content-Length': fileMetaData.size,
+            'Content-Disposition': fileMetaData.disposition
+          });
+
+          res.send(chunks.first().data);
+        });
+    })
+    .catch(err => {
+      console.error('There was an error', err);
+    });
 }
 
 const uploadFileChunks = async (req, res) => {
