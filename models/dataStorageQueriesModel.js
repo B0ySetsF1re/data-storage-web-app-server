@@ -14,5 +14,7 @@ module.exports = {
   upsertFileData: 'INSERT INTO ' + process.env.DB_KEYSPACE +
       '.files_data (object_id, chunk_id, data) VALUES (?, ?, ?)',
 
+  selectFileMetaData: 'SELECT * FROM ' + process.env.DB_KEYSPACE + '.files_metadata WHERE object_id = ?',
+
   selectFileChunks: 'SELECT object_id, chunk_id, data FROM ' + process.env.DB_KEYSPACE + '.files_data WHERE object_id = ?'
 }
