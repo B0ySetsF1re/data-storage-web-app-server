@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
     "APIs": {
       "GET": {
         "APIs-list" : "/api/data-storage",
-        "content-meta-data": "/api/data-storage/content-meta-data",
+        "meta-data-content": "/api/data-storage/meta-data-content",
         "space-info": "/api/data-storage/space-info",
         "download-file": "/api/data-storage/download-file/:id",
       },
@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
   });
 });
 
-router.get('/content-meta-data', dataStorageController.getFilesMetaDataContent);
+router.get('/meta-data-content', dataStorageController.getFilesMetaDataContent);
 
 router.get('/space-info', (req, res) => {
   res.json({ "status": "OK" });
