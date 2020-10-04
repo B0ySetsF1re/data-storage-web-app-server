@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
     "APIs": {
       "GET": {
         "APIs-list" : "/api/data-storage",
-        "content": "/api/data-storage/content",
+        "content-meta-data": "/api/data-storage/content-meta-data",
         "space-info": "/api/data-storage/space-info",
         "download-file": "/api/data-storage/download-file/:id",
       },
@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
   });
 });
 
-router.get('/content', (req, res) => {
+router.get('/content-meta-data', (req, res) => {
   res.json({ "status": "OK" });
 });
 
