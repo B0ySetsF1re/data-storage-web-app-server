@@ -2,8 +2,6 @@ const getCurrTimeConsole = require('../lib/debuggingTools/getCurrentTime/console
 
 const asyncForEach = require('../lib/asyncForEach/index');
 
-const { readFileSync, writeFile, createReadStream, CreateWriteStream } = require('fs');
-const { resolve } = require('path');
 const multiparty = require('multiparty');
 
 const cassandra = require('cassandra-driver');
