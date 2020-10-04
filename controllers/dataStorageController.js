@@ -18,7 +18,7 @@ const createKeySpace = 'CREATE KEYSPACE IF NOT EXISTS ' + process.env.DB_KEYSPAC
       ' WITH replication = {\'class\': \'SimpleStrategy\', \'replication_factor\': 3}';
 
 const createFilesMetaDataTable = 'CREATE TABLE IF NOT EXISTS ' + process.env.DB_KEYSPACE +
-    '.files_metadata (object_id uuid, name text, disposition text, type text, size double, upload_date date, upload_time time, PRIMARY KEY(object_id, name))';
+    '.files_metadata (object_id uuid, file_name text, disposition text, type text, size double, upload_date date, upload_time time, PRIMARY KEY(object_id, file_name))';
 
 const crateFilesDataTable = 'CREATE TABLE IF NOT EXISTS ' + process.env.DB_KEYSPACE +
     '.files_data (object_id uuid, chunk_id int, data blob, PRIMARY KEY(object_id, chunk_id))';
