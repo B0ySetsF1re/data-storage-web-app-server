@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const multiparty = require('multiparty');
 const dataStorageController = require('../controllers/dataStorageController');
 
 router.get('/', (req, res) => {
@@ -29,9 +30,7 @@ router.get('/space-info', (req, res) => {
   res.json({ "status": "OK" });
 });
 
-router.get('/download-file/:id', (req, res) => {
-  res.send('Download file request...');
-});
+router.get('/download-file/:id', dataStorageController.downloadFile);
 
 router.post('/upload-file', dataStorageController.uploadFile);    // Less than 1MB
 

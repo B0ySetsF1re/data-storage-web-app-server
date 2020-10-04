@@ -39,7 +39,7 @@ client.connect()
     return client.shutdown().then(() => { throw err; });
   });
 
-const collectDataFromMultprt = async (req, res) => {
+const getMultiPartFrmData = async (req, res) => {
   return new Promise((resolve, reject) => {
     let fileDataObj = {};
     let chunks = [];
@@ -91,13 +91,14 @@ const uploadFile = async (req, res) => {
 
   // const objBuffer = new Buffer.from(await fillBuffer(req, res));
   // const objBuffer = new Buffer.from((await fillBuffer(req, res)).toString('base64'), 'base64');
-  const objBuffer = new Buffer.from(await fillBuffer(req, res), 'base64');
-
-  const params = [uuid, 1, 'small_file.jpeg', objBuffer.length, date, time, objBuffer];
+  const fileDataObj = await getMultiPartFrmData(req, res);
+  const bufferObj = fileDataObj.buffer; // this var might not needed
+                                        // however it is needed if we would like to specify encoding
+  const params = [uuid, 1, fileDataObj.filename, bufferObj.length, date, time, bufferObj];
 
   client.execute(upsertFile, params, { prepare: true }, (err, result) => {
     if(!err) {
-      console.log(getCurrTimeConsole() + 'API: File has been upploaded... Chunk size is: ' + objBuffer.length);
+      console.log(getCurrTimeConsole() + 'API: File has been upploaded... Chunk size is: ' + bufferObj.length);
       res.json({ 'status': 'File upload finished...' });
     } else {
       console.log(err)
@@ -106,11 +107,11 @@ const uploadFile = async (req, res) => {
   });
 }
 
-const getFile = async (req, res) => {
+const downloadFile = async (req, res) => {
   client.execute(selectFileFromTable, [req.params.id], (err, result) => {
-    res.write(result.rows[0].data, 'binary');
-    res.end(null, 'binary');
-    res.send('OK');
+    //res.write(result.rows[0].data, 'binary');
+    //res.end(null, 'binary');
+    res.send(result.rows[0].data);
   })
 }
 
@@ -152,4 +153,4 @@ const uploadFileChunks = async (req, res) => {
 
 exports.uploadFile = uploadFile;
 exports.uploadFileChunks = uploadFileChunks;
-exports.getFile = getFile;
+exports.downloadFile = downloadFile;
