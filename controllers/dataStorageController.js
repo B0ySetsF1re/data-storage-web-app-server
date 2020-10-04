@@ -1,10 +1,10 @@
 const getCurrTimeConsole = require('../lib/debuggingTools/getCurrentTime/console');
-
 const asyncForEach = require('../lib/asyncForEach/index');
 
-const multiparty = require('multiparty');
 
+const multiparty = require('multiparty');
 const cassandra = require('cassandra-driver');
+const queries = require('../models/dataStorageQueriesModel');
 
 const client = new cassandra.Client({
   contactPoints: [process.env.HOST],
@@ -31,15 +31,15 @@ const selectFileChunks = 'SELECT object_id, chunk_id, data FROM ' + process.env.
 
 client.connect()
   .then(() => {
-    return client.execute(createKeySpace);
+    return client.execute(queries.createKeySpace);
   })
   .then(() => {
     console.log(getCurrTimeConsole() + 'API: keyspace initialization complete');
-    return client.execute(createFilesMetaDataTable);
+    return client.execute(queries.createFilesMetaDataTable);
   })
   .then(() => {
     console.log(getCurrTimeConsole() + 'API: files metadata table initialization complete');
-    return client.execute(crateFilesDataTable);
+    return client.execute(queries.crateFilesDataTable);
   })
   .then(() => {
     console.log(getCurrTimeConsole() + 'API: files data table initialization complete');
@@ -106,13 +106,10 @@ const uploadFile = async (req, res) => {
   const date = cassandra.types.LocalDate.now();
   const time = cassandra.types.LocalTime.now();
 
-  // const objBuffer = new Buffer.from(await fillBuffer(req, res));
-  // const objBuffer = new Buffer.from((await fillBuffer(req, res)).toString('base64'), 'base64');
   const fileDataObj = await getMultiPartFrmData(req, res);
-                                        // however it is needed if we would like to specify encoding
   const fileMetaDataQueryParams = [uuid, fileDataObj.filename, fileDataObj.disposition, fileDataObj.type, fileDataObj.byteCount, date, time];
 
-  await client.execute(upsertFileMetaData, fileMetaDataQueryParams, { prepare: true })
+  await client.execute(queries.upsertFileMetaData, fileMetaDataQueryParams, { prepare: true })
     .then(() => {
       console.log(getCurrTimeConsole() + 'API: File meta data has been uploaded...');
     })
@@ -123,9 +120,9 @@ const uploadFile = async (req, res) => {
   if(fileDataObj.buffer != undefined) {
     const bufferObj = fileDataObj.buffer; // this var might not needed
                                           // however it is needed if we would like to specify encoding (same for chunks in else statement below)
-    client.execute(upsertFileData, [uuid, 0, bufferObj], { prepare: true })
+    client.execute(queries.upsertFileData, [uuid, 0, bufferObj], { prepare: true })
       .then(() => {
-        console.log(getCurrTimeConsole() + 'API: File has been uploaded... File size is: ' + fileDataObj.byteCount);
+        console.log(getCurrTimeConsole() + 'API: File data has been uploaded... File size is: ' + fileDataObj.byteCount);
         res.json({ 'status': 'File upload finished...' });
       })
       .catch(err => {
@@ -136,7 +133,7 @@ const uploadFile = async (req, res) => {
   } else {
     await asyncForEach(fileDataObj.chunks, async (chunk, chunk_id) => {
 
-      await client.execute(upsertFileData, [uuid, chunk_id, chunk], { prepare: true })
+      await client.execute(queries.upsertFileData, [uuid, chunk_id, chunk], { prepare: true })
         .then(() => {
           console.log(getCurrTimeConsole() + 'API: Chunk has been uploaded... Chunk size is: ' + chunk.length);
         })
@@ -150,12 +147,12 @@ const uploadFile = async (req, res) => {
 }
 
 const downloadFile = async (req, res) => {
-  client.execute('SELECT * FROM ' + process.env.DB_KEYSPACE + '.files_metadata WHERE object_id = ' + req.params.id)
+  client.execute(queries.selectFileMetaData, [req.params.id])
     .then(fileMetaData => {
       return fileMetaData.first();
     })
     .then(fileMetaData => {
-      return client.execute(selectFileChunks, [req.params.id])
+      return client.execute(queries.selectFileChunks, [req.params.id])
         .then(async chunks => {
           if(chunks.rowLength > 1) {
             let extractedChunks = [];
