@@ -20,5 +20,9 @@ module.exports = {
 
   selectAllMetaDataContent: 'SELECT * FROM ' + process.env.DB_KEYSPACE + '.files_metadata',
 
-  selectAllFileExtensionsAndLength: 'SELECT extension, length FROM ' + process.env.DB_KEYSPACE +  '.files_metadata'
+  selectAllFileExtensionsAndLength: 'SELECT extension, length FROM ' + process.env.DB_KEYSPACE +  '.files_metadata',
+
+  deleteAllFilesMetaDataContent: 'DELETE FROM ' + process.env.DB_KEYSPACE + '.files_metadata WHERE object_id = ?',
+
+  deleteAllFilesDataContent: 'DELETE FROM ' + process.env.DB_KEYSPACE + '.files_data WHERE object_id = ?'
 }
