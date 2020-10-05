@@ -73,6 +73,11 @@ const getMultiPartFrmData = async (req, res) => {
     });
 
     form.on('part', part => {
+
+      part.on('error', err => {
+        reject(err);
+      });
+
       fileDataObj.disposition = part.headers["content-disposition"];
       fileDataObj.type = part.headers["content-type"];
       fileDataObj.fieldname = part.name;
