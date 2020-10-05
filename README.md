@@ -39,7 +39,7 @@ You can also use **[nodemon](https://www.npmjs.com/package/nodemon)** package, s
   npm install <package_name> --save
   ```
 
-## Setting up host and database name
+## Setting up host and keyspace name environment variables
 After cloning the repository, **you need to configure the environment variables for a keyspace name, host etc. Otherwise the server won't even run**. First of all create ```.env``` file in the root of the web app directory. Here is basic example of the variables configured for the _development_ web app deployment:
 
 ```
