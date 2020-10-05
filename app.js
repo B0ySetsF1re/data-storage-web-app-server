@@ -19,6 +19,6 @@ app.use('/', routes);
 app.use('/api/data-storage', files);
 
 app.listen(process.env.PORT, process.env.HOST);
-console.log(getCurrTimeConsole() + 'Server started on port ' + process.env.PORT);
+console.log(getCurrTimeConsole() + 'App: server started on port ' + process.env.PORT);
 
 module.exports = app;
