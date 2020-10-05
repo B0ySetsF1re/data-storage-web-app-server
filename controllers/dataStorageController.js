@@ -299,7 +299,7 @@ const getFilesDataStats = async (req, res) => {
     })
     .catch(err => {
       console.error('There was an error', err);
-      res.status(404).json({ 'status': 'Error: ' + err.message })
+      res.status(404).json({ 'Error': err.message })
     });
 
     res.status(200).json(contentObj);
