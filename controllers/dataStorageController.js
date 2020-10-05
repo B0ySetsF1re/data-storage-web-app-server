@@ -154,8 +154,8 @@ const uploadFile = async (req, res) => {
             res.json({ 'status': 'File upload finished...' });
           })
           .catch(err => {
-            console.log(err);
-            res.status(404).json({ 'status': 'Error uploading file!' });
+            console.error('There was an error', err);
+            res.status(404).json({ 'Error': err.message });
           });
 
       } else {
@@ -167,13 +167,13 @@ const uploadFile = async (req, res) => {
             })
             .catch(err => {
               console.log(err);
-              res.status(404).json({ 'status': 'Error uploading file!' });
+              res.status(404).json({ 'Error': err.message });
             });
         });
         res.json({ 'status': 'File upload finished...' });
       }
     })
-    .catch(err => res.status(404).json({ 'status': 'Error uploading file!' }));
+    .catch(err => res.status(404).json({ 'Error': err.message }));
 }
 
 const downloadFile = async (req, res) => {
@@ -207,7 +207,7 @@ const downloadFile = async (req, res) => {
     })
     .catch(err => {
       console.error('There was an error', err);
-      res.status(404).json({ 'status': 'Error downloading file!' });
+      res.status(404).json({ 'Error': err.message });
     });
 }
 
@@ -215,7 +215,7 @@ const getFilesMetaDataContent = async (req, res) => {
   let content = await fileMetaDataMapper.findAll()
   .catch(err => {
     console.error('There was an error', err);
-    res.status(404).json({ 'status': 'Error requesting content meta data page!' });
+    res.status(404).json({ 'Error': err.message });
   });
 
   let formattedContent = [];
