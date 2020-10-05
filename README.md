@@ -6,7 +6,7 @@
 Before cloning the repository, please make sure you have Node.js, NPM and Cassandra database installed! Here are some snippets:
 
 * Check out this **[link](https://nodejs.org/en/)** to install **Node.js** and **NPM**.
-* To install **Cassandra**, heck out its **[official documentation](https://cassandra.apache.org/doc/latest/)**. I would also advise to check the following links: **[download cassandra](https://cassandra.apache.org/download/)**, **[Node.js Driver Docs](https://docs.datastax.com/en/developer/nodejs-driver/4.6/getting-started/)**, **[Installing and configuring Cassandra on Linux](https://docs.nomagic.com/display/TWCloud190/Installing+and+configuring+Cassandra+on+Linux)**.
+* To install **Cassandra**, check out its **[official documentation](https://cassandra.apache.org/doc/latest/)**. I would also advise to check the following links: **[download cassandra](https://cassandra.apache.org/download/)**, **[Node.js Driver Docs](https://docs.datastax.com/en/developer/nodejs-driver/4.6/getting-started/)**, **[Installing and configuring Cassandra on Linux](https://docs.nomagic.com/display/TWCloud190/Installing+and+configuring+Cassandra+on+Linux)**.
 
 ## Cloning the repository
 
@@ -75,7 +75,7 @@ This _config_ can be changed as whatever you like, even for the _prod_ deploymen
 
 ## How to upload files and process other requests (might be updated)
 
-You can start managing the API by simply using **CURL** command utility (read more about it in this **[article](https://medium.com/@petehouston/upload-files-with-curl-93064dcccc76)**). If you like to test without building the web form UI yet, this is a good start. Here is small example of _upload-file_ request:
+You can start managing the API by simply using **CURL** command utility (read more about it in this **[article](https://medium.com/@petehouston/upload-files-with-curl-93064dcccc76)**). If you like to test without building the web form UI yet, this is a good start. Here is the small example of _upload-file_ request:
 
 ```bash
 curl -F upload=@/path/to/your/file.extention http://localhost:3000/api/data-storage/upload-file
