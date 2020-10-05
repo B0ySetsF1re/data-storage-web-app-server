@@ -314,9 +314,9 @@ const deleteFile = async(req, res) => {
   let deletedFileInfo = await fileMetaDataMapper.find({ object_id: req.params.id });
   deletedFileInfo = deletedFileInfo.toArray()[0];
 
-  await client.execute('DELETE FROM ' + process.env.DB_KEYSPACE + '.files_metadata WHERE object_id = ?', [req.params.id])
+  await client.execute(queries.deleteAllFilesMetaDataContent, [req.params.id])
     .then(() => {
-      return client.execute('DELETE FROM ' + process.env.DB_KEYSPACE + '.files_data WHERE object_id = ?', [req.params.id]);
+      return client.execute(queries.deleteAllFilesDataContent, [req.params.id]);
     })
     .then(() => {
       console.log(getCurrTimeConsole() + 'API: File "' + deletedFileInfo.file_name + '" has been deleted successfully...');
