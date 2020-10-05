@@ -237,12 +237,17 @@ const getFilesMetaDataContent = async (req, res) => {
 const getAllUniqueFileTypes = async () => {
   let typesCollected = [];
 
-  await client.execute('SELECT type FROM data_storage.files_metadata')
+  await client.execute('SELECT extension FROM data_storage.files_metadata')
     .then(async types => {
-      console.log(types);
+      await asyncForEach(types.rows, async (type) => {
+        typesCollected.push(type.extension);
+      })
+    })
+    .catch(err => {
+      return err;
     });
 
-  console.log(typesCollected);
+  return Array.from(new Set(typesCollected));
 }
 
 const getFilesDataStats = async (req, res) => {
