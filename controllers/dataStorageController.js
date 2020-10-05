@@ -242,7 +242,7 @@ const getFilesMetaDataContent = async (req, res) => {
 const getAllUniqueFileExtensions = async () => {
   let extensionsCollected = [];
 
-  await client.execute(queries.selectAllFileExtensions)
+  await client.execute(queries.selectAllFileExtensionsAndLength)
     .then(async types => {
       await asyncForEach(types.rows, async (type) => {
         extensionsCollected.push(type.extension);
@@ -286,7 +286,7 @@ const getFilesDataStats = async (req, res) => {
   const uniqueExtensions = await getAllUniqueFileExtensions();
   let contentObj = await initFileStatsContentObj();
 
-  await client.execute('SELECT extension, length FROM ' + process.env.DB_KEYSPACE + '.files_metadata')
+  await client.execute(queries.selectAllFileExtensionsAndLength)
     .then(async (files) => {
 
       await asyncForEach(uniqueExtensions, async (extension) => {
