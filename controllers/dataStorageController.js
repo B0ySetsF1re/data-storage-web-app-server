@@ -128,7 +128,7 @@ const uploadFile = async (req, res) => {
   const date = cassandra.types.LocalDate.now();
   const time = cassandra.types.LocalTime.now();
 
-  const fileDataObj = await getMultiPartFrmData(req, res);
+  const fileDataObj = await getMultiPartFrmData(req, res).catch(err => res.status(404).json({ 'status': 'Error uploading file!' }));
   const fileMetaDataQueryParams = [uuid, fileDataObj.filename, fileDataObj.disposition, fileDataObj.type, fileDataObj.extension, fileDataObj.byteCount, date, time];
 
   await client.execute(queries.upsertFileMetaData, fileMetaDataQueryParams, { prepare: true })
