@@ -1,7 +1,7 @@
 {
   "name": "data-storage-web-app-server",
   "version": "1.0.0",
-  "description": "A simple data storage web server with API",
+  "description": "A simple data storage web app server with API",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
