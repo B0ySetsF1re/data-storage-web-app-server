@@ -24,9 +24,7 @@ router.get('/', (req, res) => {
 
 router.get('/meta-data-content', dataStorageController.getFilesMetaDataContent);
 
-router.get('/files-stats', (req, res) => {
-  res.json({ "status": "OK" });
-});
+router.get('/files-stats', dataStorageController.getFilesDataStats);
 
 router.get('/download-file/:id', dataStorageController.downloadFile);
 

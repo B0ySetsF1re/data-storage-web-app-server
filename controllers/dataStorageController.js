@@ -235,25 +235,77 @@ const getFilesMetaDataContent = async (req, res) => {
 }
 
 const getAllUniqueFileExtensions = async () => {
-  let typesCollected = [];
+  let extensionsCollected = [];
 
   await client.execute(queries.selectAllFileExtensions)
     .then(async types => {
       await asyncForEach(types.rows, async (type) => {
-        typesCollected.push(type.extension);
+        extensionsCollected.push(type.extension);
       })
     })
     .catch(err => {
       return err;
     });
 
-  return Array.from(new Set(typesCollected));
+  return Array.from(new Set(extensionsCollected));
+}
+
+const initFileStatsContentObj = async () => {
+  const extensions = await getAllUniqueFileExtensions();
+  let fileContentObj = {};
+
+  await asyncForEach(extensions, async (extension) => {
+    fileContentObj[extension] = 0;
+  });
+
+  fileContentObj.total_content_size = 0;
+
+  return fileContentObj;
+}
+
+const initFileStatsContentArray = async () => {    // Optional function, if you would like to initiate body content
+                                              // as an array and then loop through asyncForEach with await and then parse it to the object
+  const extensions = await getAllUniqueFileExtensions();
+  let fileContentArr = [];
+
+  await asyncForEach(extensions, async (extension) => {
+    fileContentArr[extension] = 0;
+  });
+
+  fileContentArr['total_content_size'] = 0;
+
+  return fileContentObj;
 }
 
 const getFilesDataStats = async (req, res) => {
+  const uniqueExtensions = await getAllUniqueFileExtensions();
+  let contentObj = await initFileStatsContentObj();
 
+  await client.execute('SELECT extension, length FROM ' + process.env.DB_KEYSPACE + '.files_metadata')
+    .then(async (files) => {
+
+      await asyncForEach(uniqueExtensions, async (extension) => {
+        await asyncForEach(files.rows, async (file) => {
+          if(extension == file.extension) {
+            contentObj[extension] += file.length;
+            contentObj.total_content_size += file.length;
+          }
+        });
+      });
+
+      for(const property in contentObj) {
+        contentObj[property] = niceBytes(contentObj[property]).text;
+      }
+    })
+    .catch(err => {
+      console.error('There was an error', err);
+      res.status(404).json({ 'status': 'Error: ' + err.message })
+    });
+
+    res.status(200).json(contentObj);
 }
 
 exports.uploadFile = uploadFile;
 exports.downloadFile = downloadFile;
 exports.getFilesMetaDataContent = getFilesMetaDataContent;
+exports.getFilesDataStats = getFilesDataStats;
