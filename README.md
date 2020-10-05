@@ -78,7 +78,7 @@ This _config_ can be changed as whatever you like (setting your own host, port a
 You can start managing the API by simply using **CURL** command utility (read more about it in this **[article](https://medium.com/@petehouston/upload-files-with-curl-93064dcccc76)**). If you like to test without building the web form UI yet, this is a good start. Here is the small example of _upload-file_ request:
 
 ```bash
-curl -F upload=@/path/to/your/file.extention http://localhost:3000/api/data-storage/upload-file
+curl -F upload=@/path/to/your/file.extension http://localhost:3000/api/data-storage/upload-file
 ```
 
 On other hand, you can build your own web form and connect it with the API to process things.
