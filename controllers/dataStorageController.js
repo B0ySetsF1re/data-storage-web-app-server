@@ -133,44 +133,47 @@ const uploadFile = async (req, res) => {
   const date = cassandra.types.LocalDate.now();
   const time = cassandra.types.LocalTime.now();
 
-  const fileDataObj = await getMultiPartFrmData(req, res).catch(err => res.status(404).json({ 'status': 'Error uploading file!' }));
-  const fileMetaDataQueryParams = [uuid, fileDataObj.filename, fileDataObj.disposition, fileDataObj.type, fileDataObj.extension, fileDataObj.byteCount, date, time];
+  await getMultiPartFrmData(req, res)
+    .then(async (fileDataObj) => {
+      const fileMetaDataQueryParams = [uuid, fileDataObj.filename, fileDataObj.disposition, fileDataObj.type, fileDataObj.extension, fileDataObj.byteCount, date, time];
 
-  await client.execute(queries.upsertFileMetaData, fileMetaDataQueryParams, { prepare: true })
-    .then(() => {
-      console.log(getCurrTimeConsole() + 'API: File meta data has been uploaded...');
-    })
-    .catch(err => {
-      console.log(err);
-    });
-
-  if(fileDataObj.buffer != undefined) {
-    const bufferObj = fileDataObj.buffer; // this var might not needed
-                                          // however it is needed if we would like to specify encoding (same for chunks in else statement below)
-    client.execute(queries.upsertFileData, [uuid, 0, bufferObj], { prepare: true })
-      .then(() => {
-        console.log(getCurrTimeConsole() + 'API: File data has been uploaded... File size is: ' + fileDataObj.byteCount);
-        res.json({ 'status': 'File upload finished...' });
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(404).json({ 'status': 'Error uploading file!' });
-      });
-
-  } else {
-    await asyncForEach(fileDataObj.chunks, async (chunk, chunk_id) => {
-
-      await client.execute(queries.upsertFileData, [uuid, chunk_id, chunk], { prepare: true })
+      await client.execute(queries.upsertFileMetaData, fileMetaDataQueryParams, { prepare: true })
         .then(() => {
-          console.log(getCurrTimeConsole() + 'API: Chunk has been uploaded... Chunk size is: ' + chunk.length);
+          console.log(getCurrTimeConsole() + 'API: File meta data has been uploaded...');
         })
         .catch(err => {
           console.log(err);
-          res.status(404).json({ 'status': 'Error uploading file!' });
         });
-    });
-    res.json({ 'status': 'File upload finished...' });
-  }
+
+      if(fileDataObj.buffer != undefined) {
+        const bufferObj = fileDataObj.buffer; // this var might not needed
+                                              // however it is needed if we would like to specify encoding (same for chunks in else statement below)
+        client.execute(queries.upsertFileData, [uuid, 0, bufferObj], { prepare: true })
+          .then(() => {
+            console.log(getCurrTimeConsole() + 'API: File data has been uploaded... File size is: ' + fileDataObj.byteCount);
+            res.json({ 'status': 'File upload finished...' });
+          })
+          .catch(err => {
+            console.log(err);
+            res.status(404).json({ 'status': 'Error uploading file!' });
+          });
+
+      } else {
+        await asyncForEach(fileDataObj.chunks, async (chunk, chunk_id) => {
+
+          await client.execute(queries.upsertFileData, [uuid, chunk_id, chunk], { prepare: true })
+            .then(() => {
+              console.log(getCurrTimeConsole() + 'API: Chunk has been uploaded... Chunk size is: ' + chunk.length);
+            })
+            .catch(err => {
+              console.log(err);
+              res.status(404).json({ 'status': 'Error uploading file!' });
+            });
+        });
+        res.json({ 'status': 'File upload finished...' });
+      }
+    })
+    .catch(err => res.status(404).json({ 'status': 'Error uploading file!' }));
 }
 
 const downloadFile = async (req, res) => {
