@@ -40,7 +40,7 @@ You can also use **[nodemon](https://www.npmjs.com/package/nodemon)** package, s
   ```
 
 ## Setting up host and database name
-After cloning the repository, **you need to configure the environment variables for a database name, host etc. Otherwise the server won't even run** First of all create ```.env``` file in the root of the web app directory. Here is basic example of the variables configured for the _development_ web app deployment:
+After cloning the repository, **you need to configure the environment variables for a database name, host etc. Otherwise the server won't even run**. First of all create ```.env``` file in the root of the web app directory. Here is basic example of the variables configured for the _development_ web app deployment:
 
 ```
 HOST=localhost
