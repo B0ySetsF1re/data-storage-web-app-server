@@ -156,7 +156,7 @@ const uploadFile = async (req, res) => {
         client.execute(queries.upsertFileData, [uuid, 0, bufferObj], { prepare: true })
           .then(() => {
             console.log(getCurrTimeConsole() + 'API: File data has been uploaded... File size is: ' + fileDataObj.byteCount);
-            res.json({ 'status': 'File upload finished...' });
+            res.json({ 'Success': 'File upload finished...' });
           })
           .catch(err => {
             console.error('There was an error', err);
@@ -175,7 +175,7 @@ const uploadFile = async (req, res) => {
               res.status(404).json({ 'Error': err.message });
             });
         });
-        res.json({ 'status': 'File upload finished...' });
+        res.json({ 'Success': 'File upload finished...' });
       }
     })
     .catch(err => res.status(404).json({ 'Error': err.message }));
