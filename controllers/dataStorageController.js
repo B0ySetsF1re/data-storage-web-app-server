@@ -17,6 +17,12 @@ const client = new Client({
   localDataCenter: process.env.DB_DATACENTER
 });
 
+const mapperClient = new Client({
+  contactPoints: [process.env.HOST],
+  keyspace: process.env.DB_KEYSPACE,
+  localDataCenter: process.env.DB_DATACENTER
+});
+
 client.connect()
   .then(() => {
     return client.execute(queries.createKeySpace);
@@ -32,19 +38,8 @@ client.connect()
   .then(() => {
     console.log(getCurrTimeConsole() + 'API: files data table initialization complete');
     console.log(getCurrTimeConsole() + 'API: cassandra main client connected');
+    return mapperClient.connect();
   })
-  .catch((err) => {
-    console.error('There was an error', err);
-    return client.shutdown().then(() => { throw err; });
-  });
-
-const mapperClient = new Client({
-  contactPoints: [process.env.HOST],
-  keyspace: process.env.DB_KEYSPACE,
-  localDataCenter: process.env.DB_DATACENTER
-});
-
-mapperClient.connect()
   .then(() => {
     console.log(getCurrTimeConsole() + 'API: cassandra mapper client connected');
   })
