@@ -34,8 +34,6 @@ router.post('/rename-uploaded-file/:id', (req, res) => {
   res.json({ "status": "OK" });
 });
 
-router.post('/delete-uploaded-file/:id', (req, res) => {
-  res.json({ "status": "OK" });
-});
+router.post('/delete-uploaded-file/:id', dataStorageController.deleteFile);
 
 module.exports = router;

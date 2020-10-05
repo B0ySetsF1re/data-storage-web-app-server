@@ -53,12 +53,17 @@ const mappingOptions = {
     'fileMetaData': {
       tables: ['files_metadata'],
       mappings: new DefaultTableMappings()
-      }
+    },
+    'fileData': {
+      tables: ['files_data'],
+      mappings: new DefaultTableMappings()
     }
   }
+}
 
 const mapper = new Mapper(mapperClient, mappingOptions);
 const fileMetaDataMapper = mapper.forModel('fileMetaData');
+const fileDataMapper = mapper.forModel('fileData');
 
 
 const getMultiPartFrmData = async (req, res) => {
@@ -305,7 +310,26 @@ const getFilesDataStats = async (req, res) => {
     res.status(200).json(contentObj);
 }
 
+const deleteFile = async(req, res) => {
+  let deletedFileInfo = await fileMetaDataMapper.find({ object_id: req.params.id });
+  deletedFileInfo = deletedFileInfo.toArray()[0];
+
+  await client.execute('DELETE FROM ' + process.env.DB_KEYSPACE + '.files_metadata WHERE object_id = ?', [req.params.id])
+    .then(() => {
+      return client.execute('DELETE FROM ' + process.env.DB_KEYSPACE + '.files_data WHERE object_id = ?', [req.params.id]);
+    })
+    .then(() => {
+      console.log(getCurrTimeConsole() + 'API: File "' + deletedFileInfo.file_name + '" has been deleted successfully...');
+      res.status(200).json({ 'Success': 'File \"' + deletedFileInfo.file_name + '\" has been deleted...'});
+    })
+    .catch(err => {
+      console.error('There was an error', err);
+      res.status(404).json({ 'Error': err.message });
+    });
+}
+
 exports.uploadFile = uploadFile;
 exports.downloadFile = downloadFile;
 exports.getFilesMetaDataContent = getFilesMetaDataContent;
 exports.getFilesDataStats = getFilesDataStats;
+exports.deleteFile = deleteFile;
