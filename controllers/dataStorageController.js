@@ -234,10 +234,10 @@ const getFilesMetaDataContent = async (req, res) => {
   res.status(200).send(JSON.stringify(formattedContent));
 }
 
-const getAllUniqueFileTypes = async () => {
+const getAllUniqueFileExtensions = async () => {
   let typesCollected = [];
 
-  await client.execute('SELECT extension FROM data_storage.files_metadata')
+  await client.execute(queries.selectAllFileExtensions)
     .then(async types => {
       await asyncForEach(types.rows, async (type) => {
         typesCollected.push(type.extension);
