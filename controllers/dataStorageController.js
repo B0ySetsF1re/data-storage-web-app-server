@@ -77,6 +77,7 @@ const getMultiPartFrmData = async (req, res) => {
       fileDataObj.type = part.headers["content-type"];
       fileDataObj.fieldname = part.name;
       fileDataObj.filename = part.filename;
+      fileDataObj.extension = part.filename.split('.').pop();
       fileDataObj.byteCount = part.byteCount;
 
       part.on('data', chunk => {
@@ -128,7 +129,7 @@ const uploadFile = async (req, res) => {
   const time = cassandra.types.LocalTime.now();
 
   const fileDataObj = await getMultiPartFrmData(req, res);
-  const fileMetaDataQueryParams = [uuid, fileDataObj.filename, fileDataObj.disposition, fileDataObj.type, fileDataObj.byteCount, date, time];
+  const fileMetaDataQueryParams = [uuid, fileDataObj.filename, fileDataObj.disposition, fileDataObj.type, fileDataObj.extension, fileDataObj.byteCount, date, time];
 
   await client.execute(queries.upsertFileMetaData, fileMetaDataQueryParams, { prepare: true })
     .then(() => {
@@ -217,6 +218,7 @@ const getFilesMetaDataContent = async (req, res) => {
           file_name: row.file_name,
           length: niceBytes(row.length).text,
           type: row.type,
+          extension: row.extension,
           upload_date: row.upload_date,
           upload_time: row.upload_time
         });
