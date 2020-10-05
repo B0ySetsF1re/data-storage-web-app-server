@@ -153,6 +153,7 @@ const uploadFile = async (req, res) => {
       if(fileDataObj.buffer != undefined) {
         const bufferObj = fileDataObj.buffer; // this var might not needed
                                               // however it is needed if we would like to specify encoding (same for chunks in else statement below)
+                                              // if the encoding will be applied, we need to specify it again while obtainig bufer from database on file download
         client.execute(queries.upsertFileData, [uuid, 0, bufferObj], { prepare: true })
           .then(() => {
             console.log(getCurrTimeConsole() + 'API: File data has been uploaded... File size is: ' + fileDataObj.byteCount);
