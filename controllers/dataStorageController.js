@@ -331,7 +331,13 @@ const renameFile = async(req, res) => {
 }
 
 const deleteFile = async(req, res) => {
-  let deletedFileInfo = await fileMetaDataMapper.find({ object_id: req.params.id });
+  let deletedFileInfo = await fileMetaDataMapper.find({ object_id: req.params.id })
+    .catch(err => {
+      console.error(getCurrTimeConsole() + 'API: there was an error -', err);
+      res.status(404).json({ 'Error': err.message });
+      
+      return;
+    });
   deletedFileInfo = deletedFileInfo.toArray()[0];
 
   await client.execute(queries.deleteAllFilesMetaDataContent, [req.params.id])
