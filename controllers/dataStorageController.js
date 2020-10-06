@@ -311,6 +311,25 @@ const getFilesDataStats = async (req, res) => {
     res.status(200).json(contentObj);
 }
 
+const renameFile = async(req, res) => {
+  await client.execute('SELECT file_name, disposition, extension FROM ' + process.env.DB_KEYSPACE + '.files_metadata WHERE object_id = ?', [req.params.id])
+    .then(async (fileNameData) => {
+      const regex = /filename=".*"/;
+      const newFileName = req.body.new_name + '.' + fileNameData.first().extension;
+      const newFileDisposition = fileNameData.first().disposition.replace(regex, 'filename="' + newFileName + '"');
+      const params = [newFileName, newFileDisposition, req.params.id];
+
+      return await client.execute('UPDATE ' + process.env.DB_KEYSPACE + '.files_metadata SET file_name = ?, disposition = ? WHERE object_id = ?', params)
+    })
+    .then(() => {
+      res.status(200).json({ 'Success': 'File name has been changed...'});
+    })
+    .catch(err => {
+      console.error(getCurrTimeConsole() + 'API: there was an error -', err);
+      res.status(404).json({ 'Error': err.message });
+    });
+}
+
 const deleteFile = async(req, res) => {
   let deletedFileInfo = await fileMetaDataMapper.find({ object_id: req.params.id });
   deletedFileInfo = deletedFileInfo.toArray()[0];
@@ -333,4 +352,5 @@ exports.uploadFile = uploadFile;
 exports.downloadFile = downloadFile;
 exports.getFilesMetaDataContent = getFilesMetaDataContent;
 exports.getFilesDataStats = getFilesDataStats;
+exports.renameFile = renameFile;
 exports.deleteFile = deleteFile;

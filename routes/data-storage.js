@@ -30,9 +30,7 @@ router.get('/download-file/:id', dataStorageController.downloadFile);
 
 router.post('/upload-file', dataStorageController.uploadFile);
 
-router.post('/rename-uploaded-file/:id', (req, res) => {
-  res.json({ "status": "OK" });
-});
+router.post('/rename-uploaded-file/:id', dataStorageController.renameFile);
 
 router.post('/delete-uploaded-file/:id', dataStorageController.deleteFile);
 
