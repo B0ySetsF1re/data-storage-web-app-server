@@ -85,7 +85,7 @@ curl -i -X POST http://localhost:3000/api/data-storage/delete-uploaded-file // t
 **GET** requests instead can of course be accessed via browser. For example to download file, you first need to go to the _meta-data-content_ page to identify _object_id_ of a file you prefer to delete. Once you have it, the request will look like this:
 
 ```
-http://localhost:3000/api/data-storage/download_file/<object_id>
+http://localhost:3000/api/data-storage/download_file/<object_id> // without angle brackets
 ```
 
 On other hand, you can build your own web form and connect it with the API to process things.
