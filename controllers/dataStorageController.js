@@ -312,14 +312,14 @@ const getFilesDataStats = async (req, res) => {
 }
 
 const renameFile = async(req, res) => {
-  await client.execute('SELECT file_name, disposition, extension FROM ' + process.env.DB_KEYSPACE + '.files_metadata WHERE object_id = ?', [req.params.id])
+  await client.execute(queries.selectFileMetaDataNameAndDisposition, [req.params.id])
     .then(async (fileNameData) => {
       const regex = /filename=".*"/;
       const newFileName = req.body.new_name + '.' + fileNameData.first().extension;
       const newFileDisposition = fileNameData.first().disposition.replace(regex, 'filename="' + newFileName + '"');
       const params = [newFileName, newFileDisposition, req.params.id];
 
-      return await client.execute('UPDATE ' + process.env.DB_KEYSPACE + '.files_metadata SET file_name = ?, disposition = ? WHERE object_id = ?', params)
+      return await client.execute(queries.updateFileMetaDataNameAndDisposition, params)
     })
     .then(() => {
       res.status(200).json({ 'Success': 'File name has been changed...'});
