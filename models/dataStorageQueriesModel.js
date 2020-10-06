@@ -3,7 +3,7 @@ module.exports = {
         ' WITH replication = {\'class\': \'SimpleStrategy\', \'replication_factor\': 3}',
 
   createFilesMetaDataTable: 'CREATE TABLE IF NOT EXISTS ' + process.env.DB_KEYSPACE +
-      '.files_metadata (object_id uuid, file_name text, disposition text, type text, extension text, length double, upload_date date, upload_time time, PRIMARY KEY(object_id, file_name))',
+      '.files_metadata (object_id uuid, file_name text, disposition text, type text, extension text, length double, upload_date date, upload_time time, PRIMARY KEY(object_id))',
 
   crateFilesDataTable: 'CREATE TABLE IF NOT EXISTS ' + process.env.DB_KEYSPACE +
       '.files_data (object_id uuid, chunk_id int, data blob, PRIMARY KEY(object_id, chunk_id))',
