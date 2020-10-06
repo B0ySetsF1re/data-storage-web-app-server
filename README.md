@@ -53,7 +53,7 @@ DB_DATACENTER=datacenter1
 
 This _config_ can be changed as whatever you like (setting your own host, port and more), even for the _prod_ deployment.
 
-## API requests list (might be updated)
+## API requests list
 
 ```json
 {
@@ -73,7 +73,7 @@ This _config_ can be changed as whatever you like (setting your own host, port a
 }
 ```
 
-## How to upload files and process other requests (might be updated)
+## How to upload files and process other requests
 
 You can start managing the API by simply using **CURL** command utility (read more about it in this **[article](https://medium.com/@petehouston/upload-files-with-curl-93064dcccc76)**). If you like to test without building the web form UI yet, this is a good start. Here is the small example of _upload-file_ and _delete-uploaded-file_ **POST** requests:
 
@@ -91,4 +91,4 @@ http://localhost:3000/api/data-storage/download_file/<object_id> // without angl
 
 On other hand, you can build your own web form and connect it with the API to process things.
 
-Seems all, you should be all set. The documentation however more likely will be updated...
+Seems all, you should be all set!
