@@ -80,7 +80,7 @@ You can start managing the API by simply using **CURL** command utility (read mo
 ```bash
 curl -F upload=@/path/to/your/file.extension http://localhost:3000/api/data-storage/upload-file // to upload file
 curl -i -X POST http://localhost:3000/api/data-storage/delete-uploaded-file // to delete file
-curl -i -X POST -H 'Content-Type: application/json' -d '{"new_name": "new_name"}' http://localhost:3000/api/data-storage/rename-uploaded-file/:id // to rename file
+curl -i -X POST -H 'Content-Type: application/json' -d '{"new_name": "new_name"}' http://localhost:3000/api/data-storage/rename-uploaded-file/<object_id> // to rename file (object_id should be without angle brackets)
 ```
 
 **GET** requests instead can of course be accessed via browser. For example to download file, you first need to go to the _meta-data-content_ page to identify _object_id_ of a file you prefer to delete. Once you have it, the request will look like this:
