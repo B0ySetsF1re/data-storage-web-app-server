@@ -44,7 +44,7 @@ client.connect()
     console.log(getCurrTimeConsole() + 'API: cassandra mapper client connected');
   })
   .catch((err) => {
-    console.error('There was an error', err);
+    console.error(getCurrTimeConsole() + 'API: there was an error -', err);
     return client.shutdown().then(() => { throw err; });
   });
 
@@ -160,7 +160,7 @@ const uploadFile = async (req, res) => {
             res.json({ 'Success': 'File upload finished...' });
           })
           .catch(err => {
-            console.error('There was an error', err);
+            console.error(getCurrTimeConsole() + 'API: there was an error -', err);
             res.status(404).json({ 'Error': err.message });
           });
 
@@ -212,7 +212,7 @@ const downloadFile = async (req, res) => {
         });
     })
     .catch(err => {
-      console.error('There was an error', err);
+      console.error(getCurrTimeConsole() + 'API: there was an error -', err);
       res.status(404).json({ 'Error': err.message });
     });
 }
@@ -220,7 +220,7 @@ const downloadFile = async (req, res) => {
 const getFilesMetaDataContent = async (req, res) => {
   let content = await fileMetaDataMapper.findAll()
   .catch(err => {
-    console.error('There was an error', err);
+    console.error(getCurrTimeConsole() + 'API: there was an error -', err);
     res.status(404).json({ 'Error': err.message });
   });
 
@@ -304,7 +304,7 @@ const getFilesDataStats = async (req, res) => {
       }
     })
     .catch(err => {
-      console.error('There was an error', err);
+      console.error(getCurrTimeConsole() + 'API: there was an error -', err);
       res.status(404).json({ 'Error': err.message })
     });
 
@@ -324,7 +324,7 @@ const deleteFile = async(req, res) => {
       res.status(200).json({ 'Success': 'File \"' + deletedFileInfo.file_name + '\" has been deleted...'});
     })
     .catch(err => {
-      console.error('There was an error', err);
+      console.error(getCurrTimeConsole() + 'API: there was an error -', err);
       res.status(404).json({ 'Error': err.message });
     });
 }
