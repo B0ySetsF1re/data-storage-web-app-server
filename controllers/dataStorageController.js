@@ -314,6 +314,10 @@ const getFilesDataStats = async (req, res) => {
 const renameFile = async(req, res) => {
   await client.execute(queries.selectFileMetaDataNameAndDisposition, [req.params.id])
     .then(async (fileNameData) => {
+      if(!req.body.new_name) {
+        throw new Error('new_name body request was not defined!');
+      }
+
       const regex = /filename=".*"/;
       const newFileName = req.body.new_name + '.' + fileNameData.first().extension;
       const newFileDisposition = fileNameData.first().disposition.replace(regex, 'filename="' + newFileName + '"');
@@ -335,7 +339,7 @@ const deleteFile = async(req, res) => {
     .catch(err => {
       console.error(getCurrTimeConsole() + 'API: there was an error -', err);
       res.status(404).json({ 'Error': err.message });
-      
+
       return;
     });
   deletedFileInfo = deletedFileInfo.toArray()[0];
