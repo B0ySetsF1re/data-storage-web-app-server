@@ -93,7 +93,7 @@ On other hand, you can build your own web form and connect it with the API to pr
 
 ## How to upload files with actual web form (might be updated)
 
-To upload files using a web form - make sure to specify **_enctype_** and include **_name_** attribute into the _input_ tag. **Note! For now POST API requests support _multipart/form-data_ form's body requests encoding only!**
+To upload files using a web form - make sure to specify **_enctype_** and include **_name_** attribute into the **_input_** tag. **Note! For now POST API requests support _multipart/form-data_ form's body requests encoding only!**
 
 ```html
 <form method="POST" action="http://localhost:3000/api/data-storage/upload-file" enctype="multipart/form-data">
