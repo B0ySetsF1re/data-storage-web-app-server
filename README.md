@@ -105,4 +105,4 @@ To upload files using a web form - make sure to specify **_enctype_** and includ
 ###### Seems all, you should be all set!
 
 ## What's next?
-I might implement API requests that support **_application/x-www-form-urlencoded_** form's body requests encoding and **progress bar upload file interaction.** Probably review the **_buffer encoding_** on uploading/downloading files.
+I might implement API requests that support **_application/x-www-form-urlencoded_** form's body requests encoding and **progress bar upload file interaction.** Finally - maybe going to review the **_buffer encoding_** on uploading/downloading files.
