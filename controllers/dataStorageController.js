@@ -156,7 +156,7 @@ const uploadFile = async (req, res) => {
                                               // if the encoding will be applied, we need to specify it again while obtainig bufer from database on file download
         client.execute(queries.upsertFileData, [uuid, 0, bufferObj], { prepare: true })
           .then(() => {
-            console.log(getCurrTimeConsole() + 'API: File data has been uploaded... File size is: ' + fileDataObj.byteCount);
+            console.log(getCurrTimeConsole() + 'API: File data has been uploaded... File size is: ' + niceBytes(fileDataObj.byteCount).text);
             res.json({ 'Success': 'File upload finished...' });
           })
           .catch(err => {
@@ -169,14 +169,14 @@ const uploadFile = async (req, res) => {
 
           await client.execute(queries.upsertFileData, [uuid, chunk_id, chunk], { prepare: true })
             .then(() => {
-              console.log(getCurrTimeConsole() + 'API: Chunk has been uploaded... Chunk size is: ' + chunk.length);
+              console.log(getCurrTimeConsole() + 'API: Chunk has been uploaded... Chunk size is: ' + niceBytes(chunk.length).text);
             })
             .catch(err => {
               console.log(err);
               res.status(404).json({ 'Error': err.message });
             });
         });
-        console.log(getCurrTimeConsole() + 'API: File data has been uploaded... File size is: ' + fileDataObj.byteCount);
+        console.log(getCurrTimeConsole() + 'API: File data has been uploaded... File size is: ' + niceBytes(fileDataObj.byteCount).text);
         res.json({ 'Success': 'File upload finished...' });
       }
     })
