@@ -51,7 +51,7 @@ DB_DATACENTER=datacenter1
 
 ```
 
-This _config_ can be changed as whatever you like (setting your own host, port and more), even for the _prod_ deployment.
+This **_config_** can be changed as whatever you like (setting your own host, port and more), even for the **_prod_** deployment.
 
 ## API requests list
 
@@ -75,7 +75,7 @@ This _config_ can be changed as whatever you like (setting your own host, port a
 
 ## How to upload files and process other requests
 
-You can start managing the API by simply using **CURL** command utility (read more about it in this **[article](https://medium.com/@petehouston/upload-files-with-curl-93064dcccc76)**). If you like to test without building the web form UI yet, this is a good start. Here is the small example of _upload-file_ and _delete-uploaded-file_ **POST** requests:
+You can start managing the API by simply using **CURL** command utility (read more about it in this **[article](https://medium.com/@petehouston/upload-files-with-curl-93064dcccc76)**). If you like to test without building the web form UI yet, this is a good start. Here is the small example of **_upload-file_** and **_delete-uploaded-file_ POST** requests:
 
 ```bash
 curl -F upload=@/path/to/your/file.extension http://localhost:3000/api/data-storage/upload-file // to upload file
@@ -83,12 +83,23 @@ curl -i -X POST http://localhost:3000/api/data-storage/delete-uploaded-file // t
 curl -i -X POST -H 'Content-Type: application/json' -d '{"new_name": "new_name"}' http://localhost:3000/api/data-storage/rename-uploaded-file/<object_id> // to rename file (object_id should be without angle brackets)
 ```
 
-**GET** requests instead can of course be processed via browser. For example to download file, you first need to go to the _meta-data-content_ page to identify _object_id_ of the file you prefer to delete. Once you have it, the request will look like this:
+**GET** requests instead can of course be processed via browser. For example to download file, you first need to go to the **_meta-data-content_** page to identify **_object_id_** of the file you prefer to delete. Once you have it, the request will look like this:
 
 ```
 http://localhost:3000/api/data-storage/download_file/<object_id> // without angle brackets
 ```
 
 On other hand, you can build your own web form and connect it with the API to process things.
+
+## How to upload files with actual web form (might be updated)
+
+To upload files using a web form - make sure to specify **_enctype_** and include **_name_** attribute into the _input_ tag. **Note! For now POST API requests support _multipart/form-data_ form's body requests encoding only!**
+
+```html
+<form method="POST" action="http://localhost:3000/api/data-storage/upload-file" enctype="multipart/form-data">
+  <input type="file" name="upload">
+  <button type="submit">Submit</button>
+</form>
+```
 
 Seems all, you should be all set!
