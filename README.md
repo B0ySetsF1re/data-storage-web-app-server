@@ -102,4 +102,7 @@ To upload files using a web form - make sure to specify **_enctype_** and includ
 </form>
 ```
 
-Seems all, you should be all set!
+###### Seems all, you should be all set!
+
+## What's next?
+I might implement API requests that support **_application/x-www-form-urlencoded_** form's body requests encoding and **progress bar upload file interaction.**
