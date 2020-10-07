@@ -176,6 +176,7 @@ const uploadFile = async (req, res) => {
               res.status(404).json({ 'Error': err.message });
             });
         });
+        console.log(getCurrTimeConsole() + 'API: File data has been uploaded... File size is: ' + fileDataObj.byteCount);
         res.json({ 'Success': 'File upload finished...' });
       }
     })
