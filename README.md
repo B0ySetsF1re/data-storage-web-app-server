@@ -1,5 +1,5 @@
 # Data Storage Web App Server
-##### A simple data storage web app server with API
+##### Simple data storage web app server with API
 
 ## NPM and Cassandra install/config
 
