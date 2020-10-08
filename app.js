@@ -3,6 +3,7 @@ require('dotenv').config();
 const getCurrTimeConsole = require('./lib/debuggingTools/getCurrentTime/console');
 
 const express = require('express');
+const cors = require('cors');
 
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -11,6 +12,8 @@ const app = express();
 
 const routes = require('./routes/index');
 const files = require('./routes/data-storage');
+
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
