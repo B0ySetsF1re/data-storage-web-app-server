@@ -231,6 +231,7 @@ const getFilesMetaDataContent = async (req, res) => {
     formattedContent.push({
           object_id: row.object_id.toString(),
           file_name: row.file_name,
+          disposition: row.disposition,
           length: niceBytes(row.length).text,
           type: row.type,
           extension: row.extension,
