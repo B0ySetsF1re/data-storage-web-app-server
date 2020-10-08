@@ -236,7 +236,7 @@ const getFilesMetaDataContent = async (req, res) => {
           type: row.type,
           extension: row.extension,
           upload_date: row.upload_date,
-          upload_time: row.upload_time
+          upload_time: row.upload_time.toString().split('.')[0]
         });
   });
   res.status(200).send(JSON.stringify(formattedContent));
