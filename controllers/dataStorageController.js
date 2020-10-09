@@ -77,11 +77,16 @@ const getMultiPartFrmData = async (req, res) => {
       reject(err);
     });
 
-    form.on('part', part => {
+    form.on('part', async part => {
 
       part.on('error', err => {
         reject(err);
       });
+
+      if(part.byteCount <= 0) {
+        //throw new Error('asdasd');
+        reject(new Error('Empty data received!'));
+      }
 
       fileDataObj.disposition = part.headers["content-disposition"];
       fileDataObj.type = part.headers["content-type"];
@@ -180,7 +185,10 @@ const uploadFile = async (req, res) => {
         res.json({ 'Success': 'File upload finished...' });
       }
     })
-    .catch(err => res.status(404).json({ 'Error': err.message }));
+    .catch(err => {
+      console.error(getCurrTimeConsole() + 'API: there was an error -', err);
+      res.status(404).json({ 'Error': err.message })
+    });
 }
 
 const downloadFile = async (req, res) => {
