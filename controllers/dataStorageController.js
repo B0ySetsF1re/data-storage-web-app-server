@@ -84,7 +84,7 @@ const getMultiPartFrmData = async (req, res) => {
       });
 
       if(part.byteCount <= 0) {
-        //throw new Error('asdasd');
+        //throw new Error('Empty data received!');
         reject(new Error('Empty data received!'));
       }
 
