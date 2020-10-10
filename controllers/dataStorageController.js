@@ -66,6 +66,16 @@ const mapper = new Mapper(mapperClient, mappingOptions);
 const fileMetaDataMapper = mapper.forModel('fileMetaData');
 const fileDataMapper = mapper.forModel('fileData');
 
+const parseFileBar = new cliProgress.SingleBar({
+  format: getCurrTimeConsole() +
+  'API: Parse file progress | {bar} | {percentage}% || {value}/{total} Bytes',
+}, cliProgress.Presets.shades_classic);
+
+const uploadFileBar = new cliProgress.SingleBar({
+  format: getCurrTimeConsole() +
+  'API: Upload file progress | {bar} | {percentage}% || {value}/{total} Chunks',
+}, cliProgress.Presets.shades_classic);
+
 
 const getMultiPartFrmData = async (req, res) => {
   return new Promise((resolve, reject) => {
@@ -76,6 +86,10 @@ const getMultiPartFrmData = async (req, res) => {
 
     form.on('error', err => {
       reject(err);
+    });
+
+    form.on('progress', (bytesReceived, bytesExpected) => {
+        parseFileBar.update(bytesReceived);
     });
 
     form.on('part', async part => {
@@ -104,14 +118,19 @@ const getMultiPartFrmData = async (req, res) => {
     form.on('close', () => {
       if(fileDataObj.byteCount > 1048576) {
         fileDataObj.chunks = chunks;
+        parseFileBar.stop();
+
         resolve(fileDataObj);
       } else {
         fileDataObj.buffer = Buffer.concat(chunks);
+        parseFileBar.stop();
+
         resolve(fileDataObj);
       }
     });
 
     form.parse(req);
+    parseFileBar.start(form.bytesExpected, 0);
   });
 }
 
@@ -171,18 +190,13 @@ const uploadFile = async (req, res) => {
           });
 
       } else {
-        const bar = new cliProgress.SingleBar({
-          format: getCurrTimeConsole() +
-          'API: Upload file progress | {bar} | {percentage}% || {value}/{total} Chunks',
-        }, cliProgress.Presets.shades_classic);
-
-        bar.start(fileDataObj.chunks.length, 0);
+        uploadFileBar.start(fileDataObj.chunks.length, 0);
 
         await asyncForEach(fileDataObj.chunks, async (chunk, chunk_id) => {
 
           await client.execute(queries.upsertFileData, [uuid, chunk_id, chunk], { prepare: true })
             .then(async () => {
-              bar.update(chunk_id);
+              uploadFileBar.update(chunk_id);
             })
             .catch(err => {
               console.log(err);
@@ -190,8 +204,8 @@ const uploadFile = async (req, res) => {
             });
         });
 
-        bar.increment();
-        bar.stop();
+        uploadFileBar.increment();
+        uploadFileBar.stop();
         console.log(getCurrTimeConsole() + 'API: File data has been uploaded... File size is: ' + niceBytes(fileDataObj.byteCount).text);
         res.json({ 'Success': 'File upload finished...' });
       }
