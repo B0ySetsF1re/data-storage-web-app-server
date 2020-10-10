@@ -174,7 +174,7 @@ const uploadFile = async (req, res) => {
 
           await client.execute(queries.upsertFileData, [uuid, chunk_id, chunk], { prepare: true })
             .then(() => {
-              console.log(getCurrTimeConsole() + 'API: Chunk has been uploaded... Chunk size is: ' + niceBytes(chunk.length).text);
+              //console.log(getCurrTimeConsole() + 'API: Chunk has been uploaded... Chunk size is: ' + niceBytes(chunk.length).text);
             })
             .catch(err => {
               console.log(err);
@@ -202,9 +202,15 @@ const downloadFile = async (req, res) => {
           if(chunks.rowLength > 1) {
             let extractedChunks = [];
 
-            await asyncForEach(chunks.rows, async (row) => {
-              extractedChunks.push(row.data);
-            });
+            if(chunks.isPaged()) {
+              for await(const row of chunks) {
+                extractedChunks.push(row.data);
+              }
+            } else {
+              await asyncForEach(chunks.rows, async (row) => {
+                extractedChunks.push(row.data);
+              });
+            }
 
             res.status(200);
             res.set(await setFileHeaderBeforeSend(fileMetaData));
