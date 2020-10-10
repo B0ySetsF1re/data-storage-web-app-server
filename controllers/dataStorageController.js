@@ -315,7 +315,7 @@ const getFilesDataStats = async (req, res) => {
         });
       });
 
-      for(const property in contentObj) {
+      for await(const property in contentObj) {
         contentObj[property] = niceBytes(contentObj[property]).text;
       }
     })
