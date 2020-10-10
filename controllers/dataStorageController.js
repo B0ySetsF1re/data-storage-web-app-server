@@ -68,12 +68,12 @@ const fileDataMapper = mapper.forModel('fileData');
 
 const parseFileBar = new cliProgress.SingleBar({
   format: getCurrTimeConsole() +
-  'API: Parse file progress | {bar} | {percentage}% || {value}/{total} Bytes',
+  'API: parse file progress | {bar} | {percentage}% || {value}/{total} Bytes',
 }, cliProgress.Presets.shades_classic);
 
 const uploadFileBar = new cliProgress.SingleBar({
   format: getCurrTimeConsole() +
-  'API: Upload file progress | {bar} | {percentage}% || {value}/{total} Chunks',
+  'API: upload file progress | {bar} | {percentage}% || {value}/{total} Chunks',
 }, cliProgress.Presets.shades_classic);
 
 
@@ -169,7 +169,7 @@ const uploadFile = async (req, res) => {
 
       await client.execute(queries.upsertFileMetaData, fileMetaDataQueryParams, { prepare: true })
         .then(() => {
-          console.log(getCurrTimeConsole() + 'API: File meta data has been uploaded...');
+          console.log(getCurrTimeConsole() + 'API: file meta data has been uploaded...');
         })
         .catch(err => {
           console.log(err);
@@ -181,7 +181,7 @@ const uploadFile = async (req, res) => {
                                               // if the encoding will be applied, we need to specify it again while obtainig bufer from database on file download
         client.execute(queries.upsertFileData, [uuid, 0, bufferObj], { prepare: true })
           .then(() => {
-            console.log(getCurrTimeConsole() + 'API: File data has been uploaded... File size is: ' + niceBytes(fileDataObj.byteCount).text);
+            console.log(getCurrTimeConsole() + 'API: file data has been uploaded... File size is: ' + niceBytes(fileDataObj.byteCount).text);
             res.json({ 'Success': 'File upload finished...' });
           })
           .catch(err => {
@@ -206,7 +206,7 @@ const uploadFile = async (req, res) => {
 
         uploadFileBar.increment();
         uploadFileBar.stop();
-        console.log(getCurrTimeConsole() + 'API: File data has been uploaded... File size is: ' + niceBytes(fileDataObj.byteCount).text);
+        console.log(getCurrTimeConsole() + 'API: file data has been uploaded... File size is: ' + niceBytes(fileDataObj.byteCount).text);
         res.json({ 'Success': 'File upload finished...' });
       }
     })
@@ -240,13 +240,13 @@ const downloadFile = async (req, res) => {
             res.status(200);
             res.set(await setFileHeaderBeforeSend(fileMetaData));
 
-            console.log(getCurrTimeConsole() + 'API: File "' + fileMetaData.file_name + '" has been downloaded successfully...');
+            console.log(getCurrTimeConsole() + 'API: file "' + fileMetaData.file_name + '" has been downloaded successfully...');
             res.send(Buffer.concat(extractedChunks));
           } else {
             res.status(200);
             res.set(await setFileHeaderBeforeSend(fileMetaData));
 
-            console.log(getCurrTimeConsole() + 'API: File "' + fileMetaData.file_name + '" has been downloaded successfully...');
+            console.log(getCurrTimeConsole() + 'API: file "' + fileMetaData.file_name + '" has been downloaded successfully...');
             res.send(chunks.first().data);
           }
         });
@@ -390,7 +390,7 @@ const deleteFile = async(req, res) => {
       return client.execute(queries.deleteFileDataContent, [req.params.id]);
     })
     .then(() => {
-      console.log(getCurrTimeConsole() + 'API: File "' + deletedFileInfo.file_name + '" has been deleted successfully...');
+      console.log(getCurrTimeConsole() + 'API: file "' + deletedFileInfo.file_name + '" has been deleted successfully...');
       res.status(200).json({ 'Success': 'File \"' + deletedFileInfo.file_name + '\" has been deleted...'});
     })
     .catch(err => {
@@ -405,7 +405,7 @@ const deleteAllFiles = async(req, res) => {
       return client.execute(queries.deleteAllFilesDataContent);
     })
     .then(() => {
-      console.log(getCurrTimeConsole() + 'API: All the files have been deleted successfully...');
+      console.log(getCurrTimeConsole() + 'API: all the files have been deleted successfully...');
       res.status(200).json({ 'Success': 'All the files have been deleted successfully...'});
     })
     .catch(err => {
