@@ -28,5 +28,9 @@ module.exports = {
 
   deleteFileMetaDataContent: 'DELETE FROM ' + process.env.DB_KEYSPACE + '.files_metadata WHERE object_id = ?',
 
-  deleteFileDataContent: 'DELETE FROM ' + process.env.DB_KEYSPACE + '.files_data WHERE object_id = ?'
+  deleteFileDataContent: 'DELETE FROM ' + process.env.DB_KEYSPACE + '.files_data WHERE object_id = ?',
+
+  deleteAllFilesMetaDataContent: 'TRUNCATE ' + process.env.DB_KEYSPACE + '.files_metadata',
+
+  deleteAllFilesDataContent: 'TRUNCATE ' + process.env.DB_KEYSPACE + '.files_data'
 }
