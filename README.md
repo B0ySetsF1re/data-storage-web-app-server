@@ -67,7 +67,8 @@ This **_config_** can be changed as whatever you like (setting your own host, po
     "POST": {
       "upload-file": "/api/data-storage/upload-file",
       "rename-uploaded-file": "/api/data-storage/rename-uploaded-file/:id",
-      "delete-uploaded-file": "/api/data-storage/delete-uploaded-file/:id"
+      "delete-uploaded-file": "/api/data-storage/delete-uploaded-file/:id",
+      "delete-all-uploaded-files": "/api/data-storage/delete-all-uploaded-files"
     }
   }
 }
