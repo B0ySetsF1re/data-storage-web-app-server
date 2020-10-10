@@ -26,7 +26,7 @@ module.exports = {
 
   updateFileMetaDataNameAndDisposition: 'UPDATE ' + process.env.DB_KEYSPACE + '.files_metadata SET file_name = ?, disposition = ? WHERE object_id = ?',
 
-  deleteAllFilesMetaDataContent: 'DELETE FROM ' + process.env.DB_KEYSPACE + '.files_metadata WHERE object_id = ?',
+  deleteFileMetaDataContent: 'DELETE FROM ' + process.env.DB_KEYSPACE + '.files_metadata WHERE object_id = ?',
 
-  deleteAllFilesDataContent: 'DELETE FROM ' + process.env.DB_KEYSPACE + '.files_data WHERE object_id = ?'
+  deleteFileDataContent: 'DELETE FROM ' + process.env.DB_KEYSPACE + '.files_data WHERE object_id = ?'
 }
