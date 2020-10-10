@@ -4,6 +4,7 @@ const asyncForEach = require('../lib/asyncForEach/index');
 const multiparty = require('multiparty');
 const contentDisposition = require('content-disposition');
 const niceBytes = require('nice-bytes');
+const cliProgress = require('cli-progress');
 
 const cassandra = require('cassandra-driver');
 const Client = cassandra.Client;
@@ -170,17 +171,27 @@ const uploadFile = async (req, res) => {
           });
 
       } else {
+        const bar = new cliProgress.SingleBar({
+          format: getCurrTimeConsole() +
+          'API: upload file progress | {bar} | {percentage}% || {value}/{total} Chunks',
+        }, cliProgress.Presets.shades_classic);
+
+        bar.start(fileDataObj.chunks.length, 0);
+
         await asyncForEach(fileDataObj.chunks, async (chunk, chunk_id) => {
 
           await client.execute(queries.upsertFileData, [uuid, chunk_id, chunk], { prepare: true })
-            .then(() => {
-              //console.log(getCurrTimeConsole() + 'API: Chunk has been uploaded... Chunk size is: ' + niceBytes(chunk.length).text);
+            .then(async () => {
+              bar.update(chunk_id);
             })
             .catch(err => {
               console.log(err);
               res.status(404).json({ 'Error': err.message });
             });
         });
+
+        bar.increment();
+        bar.stop();
         console.log(getCurrTimeConsole() + 'API: File data has been uploaded... File size is: ' + niceBytes(fileDataObj.byteCount).text);
         res.json({ 'Success': 'File upload finished...' });
       }
@@ -315,7 +326,7 @@ const getFilesDataStats = async (req, res) => {
         });
       });
 
-      for await(const property in contentObj) {
+      for(const property in contentObj) {
         contentObj[property] = niceBytes(contentObj[property]).text;
       }
     })
