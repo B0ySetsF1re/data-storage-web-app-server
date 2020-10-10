@@ -173,7 +173,7 @@ const uploadFile = async (req, res) => {
       } else {
         const bar = new cliProgress.SingleBar({
           format: getCurrTimeConsole() +
-          'API: upload file progress | {bar} | {percentage}% || {value}/{total} Chunks',
+          'API: Upload file progress | {bar} | {percentage}% || {value}/{total} Chunks',
         }, cliProgress.Presets.shades_classic);
 
         bar.start(fileDataObj.chunks.length, 0);
