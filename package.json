@@ -19,6 +19,7 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "cassandra-driver": "^4.6.0",
+    "cli-progress": "^3.8.2",
     "content-disposition": "^0.5.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
