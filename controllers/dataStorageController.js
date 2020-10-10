@@ -371,9 +371,9 @@ const deleteFile = async(req, res) => {
     });
   deletedFileInfo = deletedFileInfo.toArray()[0];
 
-  await client.execute(queries.deleteAllFilesMetaDataContent, [req.params.id])
+  await client.execute(queries.deleteFileMetaDataContent, [req.params.id])
     .then(() => {
-      return client.execute(queries.deleteAllFilesDataContent, [req.params.id]);
+      return client.execute(queries.deleteFileDataContent, [req.params.id]);
     })
     .then(() => {
       console.log(getCurrTimeConsole() + 'API: File "' + deletedFileInfo.file_name + '" has been deleted successfully...');
@@ -385,9 +385,25 @@ const deleteFile = async(req, res) => {
     });
 }
 
+const deleteAllFiles = async(req, res) => {
+  await client.execute(queries.deleteAllFilesMetaDataContent)
+    .then(() => {
+      return client.execute(queries.deleteAllFilesDataContent);
+    })
+    .then(() => {
+      console.log(getCurrTimeConsole() + 'API: All the files have been deleted successfully...');
+      res.status(200).json({ 'Success': 'All the files have been deleted successfully...'});
+    })
+    .catch(err => {
+      console.error(getCurrTimeConsole() + 'API: there was an error -', err);
+      res.status(404).json({ 'Error': err.message });
+    })
+}
+
 exports.uploadFile = uploadFile;
 exports.downloadFile = downloadFile;
 exports.getFilesMetaDataContent = getFilesMetaDataContent;
 exports.getFilesDataStats = getFilesDataStats;
 exports.renameFile = renameFile;
 exports.deleteFile = deleteFile;
+exports.deleteAllFiles = deleteAllFiles;
