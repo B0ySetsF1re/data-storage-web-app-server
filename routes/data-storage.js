@@ -16,7 +16,8 @@ router.get('/', (req, res) => {
         "upload-file": "/api/data-storage/upload-file",
         "rename-uploaded-file": "/api/data-storage/rename-uploaded-file/:id",
         "delete-uploaded-file": "/api/data-storage/delete-uploaded-file/:id",
-        "delete-all-uploaded-files": "/api/data-storage/delete-all-uploaded-files"
+        "delete-all-uploaded-files": "/api/data-storage/delete-all-uploaded-files",
+        "delete-selected-uploaded-files": "/api/data-storage/delete-selected-uploaded-files"
       }
     }
   });
@@ -35,5 +36,7 @@ router.post('/rename-uploaded-file/:id', dataStorageController.renameFile);
 router.post('/delete-uploaded-file/:id', dataStorageController.deleteFile);
 
 router.post('/delete-all-uploaded-files', dataStorageController.deleteAllFiles);
+
+router.post('/delete-selected-uploaded-files', dataStorageController.deleteSelectedFiles);
 
 module.exports = router;

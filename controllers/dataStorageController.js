@@ -414,6 +414,32 @@ const deleteAllFiles = async(req, res) => {
     })
 }
 
+const deleteSelectedFiles = async(req, res) => {
+  try {
+    if(!req.body.ids) {
+      throw new Error('ids body request was not defined!');
+    }
+
+    await asyncForEach(req.body.ids, async (id) => {
+      await client.execute(queries.deleteFileMetaDataContent, [id])
+        .then(async () => {
+          return await client.execute(queries.deleteFileDataContent, [id]);
+        })
+        .catch(err => {
+          console.error(getCurrTimeConsole() + 'API: there was an error -', err);
+          res.status(404).json({ 'Error': err.message });
+        });
+    });
+
+    console.log(getCurrTimeConsole() + 'API: all the selected files have been deleted successfully...');
+    res.status(200).json({ 'Success': 'All the selected files have been deleted successfully...'});
+
+  } catch(err) {
+    console.error(getCurrTimeConsole() + 'API: there was an error -', err);
+    res.status(404).json({ 'Error': err.message });
+  }
+}
+
 exports.uploadFile = uploadFile;
 exports.downloadFile = downloadFile;
 exports.getFilesMetaDataContent = getFilesMetaDataContent;
@@ -421,3 +447,4 @@ exports.getFilesDataStats = getFilesDataStats;
 exports.renameFile = renameFile;
 exports.deleteFile = deleteFile;
 exports.deleteAllFiles = deleteAllFiles;
+exports.deleteSelectedFiles = deleteSelectedFiles;
