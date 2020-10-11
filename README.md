@@ -76,11 +76,12 @@ This **_config_** can be changed as whatever you like (setting your own host, po
 
 ## How to upload files and process other requests
 
-You can start managing the API by simply using **CURL** command utility (read more about it in this **[article](https://medium.com/@petehouston/upload-files-with-curl-93064dcccc76)**). If you like to test without building the web form UI yet, this is a good start. Here is the small example of **_upload-file_** and **_delete-uploaded-file_ POST** requests:
+You can start managing the API by simply using **CURL** command utility (read more about it in this **[article](https://medium.com/@petehouston/upload-files-with-curl-93064dcccc76)**). If you like to test without building the web form UI yet, this is a good start. Here is the small example of **_upload-file_** and other **POST** requests:
 
 ```bash
 curl -F upload=@/path/to/your/file.extension http://localhost:3000/api/data-storage/upload-file // to upload file
-curl -i -X POST http://localhost:3000/api/data-storage/delete-uploaded-file // to delete file
+curl -i -X POST http://localhost:3000/api/data-storage/delete-uploaded-file/<object_id> // to delete file - make sure to provide file id (without angle brackets)
+curl -i -X POST http://localhost:3000/api/data-storage/delete-all-uploaded-files/ // to deleta completely all files from the data base
 curl -i -X POST -H 'Content-Type: application/json' -d '{"new_name": "new_name"}' http://localhost:3000/api/data-storage/rename-uploaded-file/<object_id> // to rename file (object_id should be without angle brackets)
 ```
 
