@@ -356,7 +356,8 @@ const renameFile = async(req, res) => {
   await client.execute(queries.selectFileMetaDataNameAndDisposition, [req.params.id])
     .then(async (fileNameData) => {
       if(!req.body.new_name) {
-        throw new Error('new_name body request was not defined!');
+        throw new Error('File name was not defined!');
+        return;
       }
 
       const regex = /filename=".*"/;
