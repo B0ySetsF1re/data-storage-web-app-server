@@ -418,7 +418,9 @@ const deleteAllFiles = async(req, res) => {
 const deleteSelectedFiles = async(req, res) => {
   try {
     if(!req.body.ids) {
-      throw new Error('ids body request was not defined!');
+      throw new Error('IDs are not defined!');
+    } else if(req.body.ids.length == 0) {
+      throw new Error('No files were selected!');
     }
 
     await asyncForEach(req.body.ids, async (id) => {
