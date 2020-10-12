@@ -186,7 +186,7 @@ const uploadFile = async (req, res) => {
           })
           .catch(err => {
             console.error(getCurrTimeConsole() + 'API: there was an error -', err);
-            res.status(404).json({ 'Error': err.message });
+            res.status(400).json({ 'Error': err.message });
           });
 
       } else {
@@ -200,7 +200,7 @@ const uploadFile = async (req, res) => {
             })
             .catch(err => {
               console.log(err);
-              res.status(404).json({ 'Error': err.message });
+              res.status(400).json({ 'Error': err.message });
             });
         });
 
@@ -212,7 +212,7 @@ const uploadFile = async (req, res) => {
     })
     .catch(err => {
       console.error(getCurrTimeConsole() + 'API: there was an error -', err);
-      res.status(404).json({ 'Error': err.message })
+      res.status(400).json({ 'Error': err.message })
     });
 }
 
@@ -253,7 +253,7 @@ const downloadFile = async (req, res) => {
     })
     .catch(err => {
       console.error(getCurrTimeConsole() + 'API: there was an error -', err);
-      res.status(404).json({ 'Error': err.message });
+      res.status(400).json({ 'Error': err.message });
     });
 }
 
@@ -261,7 +261,7 @@ const getFilesMetaDataContent = async (req, res) => {
   let content = await fileMetaDataMapper.findAll()
   .catch(err => {
     console.error(getCurrTimeConsole() + 'API: there was an error -', err);
-    res.status(404).json({ 'Error': err.message });
+    res.status(400).json({ 'Error': err.message });
   });
 
   let formattedContent = [];
@@ -346,7 +346,7 @@ const getFilesDataStats = async (req, res) => {
     })
     .catch(err => {
       console.error(getCurrTimeConsole() + 'API: there was an error -', err);
-      res.status(404).json({ 'Error': err.message })
+      res.status(400).json({ 'Error': err.message })
     });
 
     res.status(200).json(contentObj);
@@ -371,7 +371,7 @@ const renameFile = async(req, res) => {
     })
     .catch(err => {
       console.error(getCurrTimeConsole() + 'API: there was an error -', err);
-      res.status(404).json({ 'Error': err.message });
+      res.status(400).json({ 'Error': err.message });
     });
 }
 
@@ -379,7 +379,7 @@ const deleteFile = async(req, res) => {
   let deletedFileInfo = await fileMetaDataMapper.find({ object_id: req.params.id })
     .catch(err => {
       console.error(getCurrTimeConsole() + 'API: there was an error -', err);
-      res.status(404).json({ 'Error': err.message });
+      res.status(400).json({ 'Error': err.message });
 
       return;
     });
@@ -395,7 +395,7 @@ const deleteFile = async(req, res) => {
     })
     .catch(err => {
       console.error(getCurrTimeConsole() + 'API: there was an error -', err);
-      res.status(404).json({ 'Error': err.message });
+      res.status(400).json({ 'Error': err.message });
     });
 }
 
@@ -410,7 +410,7 @@ const deleteAllFiles = async(req, res) => {
     })
     .catch(err => {
       console.error(getCurrTimeConsole() + 'API: there was an error -', err);
-      res.status(404).json({ 'Error': err.message });
+      res.status(400).json({ 'Error': err.message });
     })
 }
 
@@ -427,7 +427,7 @@ const deleteSelectedFiles = async(req, res) => {
         })
         .catch(err => {
           console.error(getCurrTimeConsole() + 'API: there was an error -', err);
-          res.status(404).json({ 'Error': err.message });
+          res.status(400).json({ 'Error': err.message });
         });
     });
 
@@ -436,7 +436,7 @@ const deleteSelectedFiles = async(req, res) => {
 
   } catch(err) {
     console.error(getCurrTimeConsole() + 'API: there was an error -', err);
-    res.status(404).json({ 'Error': err.message });
+    res.status(400).json({ 'Error': err.message });
   }
 }
 
