@@ -53,7 +53,7 @@ DB_DATACENTER=datacenter1
 
 This **_config_** can be changed as whatever you like (setting your own host, port and more), even for the **_prod_** deployment.
 
-## API requests list
+## API requests list (might be updated)
 
 ```json
 {
@@ -75,7 +75,7 @@ This **_config_** can be changed as whatever you like (setting your own host, po
 }
 ```
 
-## How to upload files and process other requests
+## How to upload files and process other requests (might be updated)
 
 You can start managing the API by simply using **CURL** command utility (read more about it in this **[article](https://medium.com/@petehouston/upload-files-with-curl-93064dcccc76)**). If you like to test without building the web form UI yet, this is a good start. Here is the small example of **_upload-file_** and other **POST** requests:
 
