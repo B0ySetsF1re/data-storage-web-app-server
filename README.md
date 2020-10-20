@@ -53,7 +53,7 @@ DB_DATACENTER=datacenter1
 
 This **_config_** can be changed as whatever you like (setting your own host, port and more), even for the **_prod_** deployment.
 
-## Queries model object instantiation from a function-constructor config
+### Queries model object instantiation from a function-constructor config
 
 It is possible to instantiate queries model **(dataStorageQueriesModel.js)** with environment variable or any other variable you like:
 
