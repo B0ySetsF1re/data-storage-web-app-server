@@ -10,7 +10,9 @@ const cassandra = require('cassandra-driver');
 const Client = cassandra.Client;
 const Mapper = cassandra.mapping.Mapper;
 const DefaultTableMappings = cassandra.mapping.DefaultTableMappings;
-const queries = require('../models/dataStorageQueriesModel');
+const QueriesModel = require('../models/dataStorageQueriesModel');
+
+const queries = new QueriesModel(process.env.DB_KEYSPACE); // new QueriesModel('data_storage');
 
 const client = new Client({
   contactPoints: [process.env.HOST],
