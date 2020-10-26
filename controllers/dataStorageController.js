@@ -7,62 +7,18 @@ const niceBytes = require('nice-bytes');
 const cliProgress = require('cli-progress');
 
 const cassandra = require('cassandra-driver');
-const Client = cassandra.Client;
+//const Client = cassandra.Client;
 const Mapper = cassandra.mapping.Mapper;
-const DefaultTableMappings = cassandra.mapping.DefaultTableMappings;
+//const DefaultTableMappings = cassandra.mapping.DefaultTableMappings;
 const QueriesModel = require('../models/queriesModel');
+const DBClientModel = require('../models/DBClientModel');
+const DBMapperClientModel = require('../models/DBMapperClientModel');
+const DBMapperOptionsModel = require('../models/DBMapperOptionsModel');
 
 const queries = new QueriesModel(process.env.DB_KEYSPACE); // new QueriesModel('data_storage');
-
-const client = new Client({
-  contactPoints: [process.env.HOST],
-  //keyspace: process.env.DB_KEYSPACE,
-  localDataCenter: process.env.DB_DATACENTER
-});
-
-const mapperClient = new Client({
-  contactPoints: [process.env.HOST],
-  keyspace: process.env.DB_KEYSPACE,
-  localDataCenter: process.env.DB_DATACENTER
-});
-
-client.connect()
-  .then(() => {
-    return client.execute(queries.createKeySpace);
-  })
-  .then(() => {
-    console.log(getCurrTimeConsole() + 'API: keyspace initialization complete');
-    return client.execute(queries.createFilesMetaDataTable);
-  })
-  .then(() => {
-    console.log(getCurrTimeConsole() + 'API: files metadata table initialization complete');
-    return client.execute(queries.crateFilesDataTable);
-  })
-  .then(() => {
-    console.log(getCurrTimeConsole() + 'API: files data table initialization complete');
-    console.log(getCurrTimeConsole() + 'API: cassandra main client connected');
-    return mapperClient.connect();
-  })
-  .then(() => {
-    console.log(getCurrTimeConsole() + 'API: cassandra mapper client connected');
-  })
-  .catch((err) => {
-    console.error(getCurrTimeConsole() + 'API: there was an error -', err);
-    return client.shutdown().then(() => { throw err; });
-  });
-
-const mappingOptions = {
-  models: {
-    'fileMetaData': {
-      tables: ['files_metadata'],
-      mappings: new DefaultTableMappings()
-    },
-    'fileData': {
-      tables: ['files_data'],
-      mappings: new DefaultTableMappings()
-    }
-  }
-}
+const client = new DBClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER);
+const mapperClient = new DBMapperClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER);
+const mappingOptions = new DBMapperOptionsModel();
 
 const mapper = new Mapper(mapperClient, mappingOptions);
 const fileMetaDataMapper = mapper.forModel('fileMetaData');
