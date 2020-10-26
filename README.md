@@ -73,6 +73,8 @@ const queries = new QueriesModel('data_storage');
 
 ```
 
+You can also check **DBClientModel** and **DBMapperClientModel** constructors. They have more arguments while instantiating their objects.
+
 Server uses environment variable for the object instantiation by default. However it's up to you on what to choose.
 
 
