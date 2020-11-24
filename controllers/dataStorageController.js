@@ -16,8 +16,8 @@ const DBMapperClientModel = require('../models/DBMapperClientModel');
 const DBMapperOptionsModel = require('../models/DBMapperOptionsModel');
 
 const queries = new QueriesModel(process.env.DB_KEYSPACE); // new QueriesModel('data_storage');
-const client = new DBClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER);
-const mapperClient = new DBMapperClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER);
+const client = new DBClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER).getDB();
+const mapperClient = new DBMapperClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER).getMP();
 const mappingOptions = new DBMapperOptionsModel();
 
 const mapper = new Mapper(mapperClient, mappingOptions);

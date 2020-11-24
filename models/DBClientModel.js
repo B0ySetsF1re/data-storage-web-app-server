@@ -10,23 +10,23 @@ module.exports = function DBClientModel(HOST, KEYSPACE, DATACENTER) {
     return new DBClientModel(HOST, KEYSPACE, DATACENTER);
   }
 
-  this.client = new Client({
+  this._client = new Client({
     contactPoints: [HOST],
     //keyspace: process.env.DB_KEYSPACE,
     localDataCenter: DATACENTER
   });
 
-  this.client.connect()
+  this._client.connect()
     .then(() => {
-      return this.client.execute(queries.createKeySpace);
+      return this._client.execute(queries.createKeySpace);
     })
     .then(() => {
       console.log(getCurrTimeConsole() + 'API: keyspace initialization complete');
-      return this.client.execute(queries.createFilesMetaDataTable);
+      return this._client.execute(queries.createFilesMetaDataTable);
     })
     .then(() => {
       console.log(getCurrTimeConsole() + 'API: files metadata table initialization complete');
-      return this.client.execute(queries.crateFilesDataTable);
+      return this._client.execute(queries.crateFilesDataTable);
     })
     .then(() => {
       console.log(getCurrTimeConsole() + 'API: files data table initialization complete');
@@ -34,8 +34,12 @@ module.exports = function DBClientModel(HOST, KEYSPACE, DATACENTER) {
     })
     .catch((err) => {
       console.error(getCurrTimeConsole() + 'API: there was an error -', err);
-      return this.client.shutdown().then(() => { throw err; });
+      return this._client.shutdown().then(() => { throw err; });
     });
 
-  return this.client;
+    this.getDB = () => {
+      return this._client;
+    }
+
+  return this;
 }
