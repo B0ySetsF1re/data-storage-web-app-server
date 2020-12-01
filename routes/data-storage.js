@@ -23,7 +23,7 @@ const mapper = new Mapper(mapperClient, mappingOptions);
 const fileMetaDataMapper = mapper.forModel('fileMetaData');
 const fileDataMapper = mapper.forModel('fileData');
 
-// Controllers (instentiated objects)
+// Controllers (instantiated objects)
 const uploadDataController = new UploadData(client.getDB());
 const downloadDataController = new DownloadData(client.getDB());
 const dataInfoController = new DataInfo(client.getDB(), fileMetaDataMapper);
