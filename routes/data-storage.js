@@ -10,6 +10,7 @@ const DBMapperOptionsModel = require('../models/DBMapperOptionsModel');
 const UploadData = require('../controllers/uploadDataController');
 const DownloadData = require('../controllers/downloadDataController');
 const DataInfo = require('../controllers/dataInfoController');
+const RenameData = require('../controllers/renameDataController');
 
 const client = new DBClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER);
 const mapperClient = new DBMapperClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER).getMP();
@@ -21,6 +22,7 @@ const fileDataMapper = mapper.forModel('fileData');
 const uploadDataController = new UploadData(client.getDB());
 const downloadDataController = new DownloadData(client.getDB());
 const dataInfoController = new DataInfo(client.getDB(), fileMetaDataMapper);
+const renameDataController = new RenameData(client.getDB());
 
 router.get('/', (req, res) => {
   // res.setHeader('Content-Type', 'application/json');
@@ -59,7 +61,9 @@ router.post('/upload-file', (req, res) => {
   uploadDataController.uploadFile(req, res);
 });
 
-router.post('/rename-uploaded-file/:id', dataStorageController.renameFile);
+router.post('/rename-uploaded-file/:id', (req, res) => {
+  renameDataController.renameFile(req, res);
+});
 
 router.post('/delete-uploaded-file/:id', dataStorageController.deleteFile);
 
