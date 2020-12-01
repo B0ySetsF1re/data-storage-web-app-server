@@ -3,6 +3,8 @@ const router = express.Router();
 const dataStorageController = require('../controllers/dataStorageController');
 
 const DBClientModel = require('../models/DBClientModel');
+const DBMapperClientModel = require('../models/DBMapperClientModel');
+const DBMapperOptionsModel = require('../models/DBMapperOptionsModel');
 const UploadData = require('../controllers/uploadDataController');
 const DownloadData = require('../controllers/downloadDataController');
 
