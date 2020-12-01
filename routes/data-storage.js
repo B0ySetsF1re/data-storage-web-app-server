@@ -2,6 +2,12 @@ const express = require('express');
 const router = express.Router();
 const dataStorageController = require('../controllers/dataStorageController');
 
+const DBClientModel = require('../models/DBClientModel');
+const UploadData = require('../controllers/uploadDataController');
+
+const client = new DBClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER);
+const uploadDataController = new UploadData(client.getDB());
+
 router.get('/', (req, res) => {
   // res.setHeader('Content-Type', 'application/json');
   res.status(200).json({
@@ -29,7 +35,9 @@ router.get('/files-stats', dataStorageController.getFilesDataStats);
 
 router.get('/download-file/:id', dataStorageController.downloadFile);
 
-router.post('/upload-file', dataStorageController.uploadFile);
+router.post('/upload-file', (req, res) => {
+  uploadDataController.uploadFile(req, res);
+});
 
 router.post('/rename-uploaded-file/:id', dataStorageController.renameFile);
 
