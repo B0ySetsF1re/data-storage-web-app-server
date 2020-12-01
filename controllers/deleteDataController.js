@@ -7,10 +7,10 @@ const niceBytes = require('nice-bytes');
 const QueriesModel = require('../models/queriesModel');
 
 class DeleteData {
-  constructor(client, mapper) {
+  constructor(queries, client, mapper) {
+    this.queries = queries;
     this.client = client;
     this.mapper = mapper;
-    this.queries = new QueriesModel(process.env.DB_KEYSPACE);
   }
 
     async deleteFile(req, res) {

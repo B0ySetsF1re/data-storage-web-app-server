@@ -7,9 +7,9 @@ const niceBytes = require('nice-bytes');
 const QueriesModel = require('../models/queriesModel');
 
 class DownloadData {
-  constructor(client) {
+  constructor(queries, client) {
+    this.queries = queries;
     this.client = client;
-    this.queries = this.queries = new QueriesModel(process.env.DB_KEYSPACE);
   }
 
   async _setFileHeaderBeforeSend(fileMetaData) {

@@ -7,9 +7,9 @@ const niceBytes = require('nice-bytes');
 const QueriesModel = require('../models/queriesModel');
 
 class RenameData {
-  constructor(client) {
+  constructor(queries, client) {
+    this.queries = queries;
     this.client = client;
-    this.queries = new QueriesModel(process.env.DB_KEYSPACE);
   }
 
   async renameFile(req, res) {

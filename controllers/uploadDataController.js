@@ -9,9 +9,9 @@ const { types } = require('cassandra-driver');
 const QueriesModel = require('../models/queriesModel');
 
 class UploadData {
-  constructor(client) {
+  constructor(queries, client) {
+    this.queries = queries;
     this.client = client;
-    this.queries = new QueriesModel(process.env.DB_KEYSPACE);
 
     this.parseFileBar = new cliProgress.SingleBar({
       format: getCurrTimeConsole() +

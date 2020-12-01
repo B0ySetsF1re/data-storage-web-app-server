@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const cassandra = require('cassandra-driver');
+const { mapping } = require('cassandra-driver');
 
 // Models
-const Mapper = cassandra.mapping.Mapper;
+const QueriesModel = require('../models/queriesModel');
 const DBClientModel = require('../models/DBClientModel');
 const DBMapperClientModel = require('../models/DBMapperClientModel');
 const DBMapperOptionsModel = require('../models/DBMapperOptionsModel');
@@ -16,19 +16,20 @@ const RenameData = require('../controllers/renameDataController');
 const DeleteData = require('../controllers/deleteDataController');
 
 // Connecting and configuring cassandra client and mappers
+const queries = new QueriesModel(process.env.DB_KEYSPACE);
 const client = new DBClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER);
 const mapperClient = new DBMapperClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER).getMP();
 const mappingOptions = new DBMapperOptionsModel();
-const mapper = new Mapper(mapperClient, mappingOptions);
+const mapper = new mapping.Mapper(mapperClient, mappingOptions);
 const fileMetaDataMapper = mapper.forModel('fileMetaData');
 const fileDataMapper = mapper.forModel('fileData');
 
 // Controllers (instantiated objects)
-const uploadDataController = new UploadData(client.getDB());
-const downloadDataController = new DownloadData(client.getDB());
-const dataInfoController = new DataInfo(client.getDB(), fileMetaDataMapper);
-const renameDataController = new RenameData(client.getDB());
-const deleteDataController = new DeleteData(client.getDB(), fileMetaDataMapper);
+const uploadDataController = new UploadData(queries, client.getDB());
+const downloadDataController = new DownloadData(queries, client.getDB());
+const dataInfoController = new DataInfo(queries, client.getDB(), fileMetaDataMapper);
+const renameDataController = new RenameData(queries, client.getDB());
+const deleteDataController = new DeleteData(queries, client.getDB(), fileMetaDataMapper);
 
 router.get('/', (req, res) => {
   // res.setHeader('Content-Type', 'application/json');
