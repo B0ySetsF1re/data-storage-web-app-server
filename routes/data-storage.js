@@ -2,16 +2,20 @@ const express = require('express');
 const router = express.Router();
 const cassandra = require('cassandra-driver');
 
+// Models
 const Mapper = cassandra.mapping.Mapper;
 const DBClientModel = require('../models/DBClientModel');
 const DBMapperClientModel = require('../models/DBMapperClientModel');
 const DBMapperOptionsModel = require('../models/DBMapperOptionsModel');
+
+// Controllers (classes)
 const UploadData = require('../controllers/uploadDataController');
 const DownloadData = require('../controllers/downloadDataController');
 const DataInfo = require('../controllers/dataInfoController');
 const RenameData = require('../controllers/renameDataController');
 const DeleteData = require('../controllers/deleteDataController');
 
+// Connecting and configuring cassandra client and mappers
 const client = new DBClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER);
 const mapperClient = new DBMapperClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER).getMP();
 const mappingOptions = new DBMapperOptionsModel();
@@ -19,6 +23,7 @@ const mapper = new Mapper(mapperClient, mappingOptions);
 const fileMetaDataMapper = mapper.forModel('fileMetaData');
 const fileDataMapper = mapper.forModel('fileData');
 
+// Controllers (instentiated objects)
 const uploadDataController = new UploadData(client.getDB());
 const downloadDataController = new DownloadData(client.getDB());
 const dataInfoController = new DataInfo(client.getDB(), fileMetaDataMapper);
