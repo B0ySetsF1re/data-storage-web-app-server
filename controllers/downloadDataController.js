@@ -1,9 +1,7 @@
 const getCurrTimeConsole = require('../lib/debuggingTools/getCurrentTime/console');
 const asyncForEach = require('../lib/asyncForEach/index');
 
-const multiparty = require('multiparty');
 const niceBytes = require('nice-bytes');
-const cliProgress = require('cli-progress');
 
 const QueriesModel = require('../models/queriesModel');
 
