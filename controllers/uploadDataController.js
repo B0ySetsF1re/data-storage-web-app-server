@@ -11,7 +11,7 @@ const QueriesModel = require('../models/queriesModel');
 class UploadData {
   constructor(client) {
     this.client = client;
-    this.queries = new QueriesModel(process.env.DB_KEYSPACE); // new QueriesModel('data_storage');
+    this.queries = new QueriesModel(process.env.DB_KEYSPACE);
 
     this.parseFileBar = new cliProgress.SingleBar({
       format: getCurrTimeConsole() +
