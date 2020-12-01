@@ -4,7 +4,7 @@ const asyncForEach = require('../lib/asyncForEach/index');
 const multiparty = require('multiparty');
 const niceBytes = require('nice-bytes');
 const cliProgress = require('cli-progress');
-const cassandra = require('cassandra-driver');
+const { types } = require('cassandra-driver');
 
 const QueriesModel = require('../models/queriesModel');
 
@@ -97,9 +97,9 @@ class UploadData {
   }
 
   async uploadFile(req, res) {
-    const uuid = cassandra.types.uuid();
-    const date = cassandra.types.LocalDate.now();
-    const time = cassandra.types.LocalTime.now();
+    const uuid = types.uuid();
+    const date = types.LocalDate.now();
+    const time = types.LocalTime.now();
 
     await this._getMultiPartFrmData(req, res)
       .then(async (fileDataObj) => {
