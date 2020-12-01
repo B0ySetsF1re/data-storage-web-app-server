@@ -1,16 +1,26 @@
 const express = require('express');
 const router = express.Router();
+const cassandra = require('cassandra-driver');
 const dataStorageController = require('../controllers/dataStorageController');
 
+const Mapper = cassandra.mapping.Mapper;
 const DBClientModel = require('../models/DBClientModel');
 const DBMapperClientModel = require('../models/DBMapperClientModel');
 const DBMapperOptionsModel = require('../models/DBMapperOptionsModel');
 const UploadData = require('../controllers/uploadDataController');
 const DownloadData = require('../controllers/downloadDataController');
+const DataInfo = require('../controllers/dataInfoController');
 
 const client = new DBClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER);
+const mapperClient = new DBMapperClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER).getMP();
+const mappingOptions = new DBMapperOptionsModel();
+const mapper = new Mapper(mapperClient, mappingOptions);
+const fileMetaDataMapper = mapper.forModel('fileMetaData');
+const fileDataMapper = mapper.forModel('fileData');
+
 const uploadDataController = new UploadData(client.getDB());
 const downloadDataController = new DownloadData(client.getDB());
+const dataInfoController = new DataInfo(client.getDB(), fileMetaDataMapper);
 
 router.get('/', (req, res) => {
   // res.setHeader('Content-Type', 'application/json');
