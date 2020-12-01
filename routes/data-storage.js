@@ -4,9 +4,11 @@ const dataStorageController = require('../controllers/dataStorageController');
 
 const DBClientModel = require('../models/DBClientModel');
 const UploadData = require('../controllers/uploadDataController');
+const DownloadData = require('../controllers/downloadDataController');
 
 const client = new DBClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER);
 const uploadDataController = new UploadData(client.getDB());
+const downloadDataController = new DownloadData(client.getDB());
 
 router.get('/', (req, res) => {
   // res.setHeader('Content-Type', 'application/json');
@@ -33,7 +35,9 @@ router.get('/meta-data-content', dataStorageController.getFilesMetaDataContent);
 
 router.get('/files-stats', dataStorageController.getFilesDataStats);
 
-router.get('/download-file/:id', dataStorageController.downloadFile);
+router.get('/download-file/:id', (req, res) => {
+  downloadDataController.downloadFile(req, res);
+});
 
 router.post('/upload-file', (req, res) => {
   uploadDataController.uploadFile(req, res);
