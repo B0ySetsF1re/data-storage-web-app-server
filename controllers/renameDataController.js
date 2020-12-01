@@ -3,7 +3,6 @@ const asyncForEach = require('../lib/asyncForEach/index');
 
 const contentDisposition = require('content-disposition');
 const niceBytes = require('nice-bytes');
-const cassandra = require('cassandra-driver');
 
 const QueriesModel = require('../models/queriesModel');
 

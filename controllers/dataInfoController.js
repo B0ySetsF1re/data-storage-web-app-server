@@ -2,7 +2,6 @@ const getCurrTimeConsole = require('../lib/debuggingTools/getCurrentTime/console
 const asyncForEach = require('../lib/asyncForEach/index');
 
 const niceBytes = require('nice-bytes');
-const cassandra = require('cassandra-driver');
 
 const QueriesModel = require('../models/queriesModel');
 

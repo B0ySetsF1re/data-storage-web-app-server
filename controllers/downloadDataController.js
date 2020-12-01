@@ -4,7 +4,6 @@ const asyncForEach = require('../lib/asyncForEach/index');
 const multiparty = require('multiparty');
 const niceBytes = require('nice-bytes');
 const cliProgress = require('cli-progress');
-const cassandra = require('cassandra-driver');
 
 const QueriesModel = require('../models/queriesModel');
 
