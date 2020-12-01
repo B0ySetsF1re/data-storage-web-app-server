@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const cassandra = require('cassandra-driver');
-const dataStorageController = require('../controllers/dataStorageController');
 
 const Mapper = cassandra.mapping.Mapper;
 const DBClientModel = require('../models/DBClientModel');
@@ -11,6 +10,7 @@ const UploadData = require('../controllers/uploadDataController');
 const DownloadData = require('../controllers/downloadDataController');
 const DataInfo = require('../controllers/dataInfoController');
 const RenameData = require('../controllers/renameDataController');
+const DeleteData = require('../controllers/deleteDataController');
 
 const client = new DBClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER);
 const mapperClient = new DBMapperClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER).getMP();
@@ -23,6 +23,7 @@ const uploadDataController = new UploadData(client.getDB());
 const downloadDataController = new DownloadData(client.getDB());
 const dataInfoController = new DataInfo(client.getDB(), fileMetaDataMapper);
 const renameDataController = new RenameData(client.getDB());
+const deleteDataController = new DeleteData(client.getDB(), fileMetaDataMapper);
 
 router.get('/', (req, res) => {
   // res.setHeader('Content-Type', 'application/json');
@@ -65,10 +66,16 @@ router.post('/rename-uploaded-file/:id', (req, res) => {
   renameDataController.renameFile(req, res);
 });
 
-router.post('/delete-uploaded-file/:id', dataStorageController.deleteFile);
+router.post('/delete-uploaded-file/:id', (req, res) => {
+  deleteDataController.deleteFile(req, res);
+});
 
-router.post('/delete-all-uploaded-files', dataStorageController.deleteAllFiles);
+router.post('/delete-all-uploaded-files', (req, res) => {
+  deleteDataController.deleteAllFiles(req, res);
+});
 
-router.post('/delete-selected-uploaded-files', dataStorageController.deleteSelectedFiles);
+router.post('/delete-selected-uploaded-files', (req, res) => {
+  deleteDataController.deleteSelectedFiles(req, res);
+});
 
 module.exports = router;
