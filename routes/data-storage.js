@@ -43,9 +43,13 @@ router.get('/', (req, res) => {
   });
 });
 
-router.get('/meta-data-content', dataStorageController.getFilesMetaDataContent);
+router.get('/meta-data-content', (req, res) => {
+  dataInfoController.getFilesMetaDataContent(req, res);
+});
 
-router.get('/files-stats', dataStorageController.getFilesDataStats);
+router.get('/files-stats', (req, res) => {
+  dataInfoController.getFilesDataStats(req, res);
+});
 
 router.get('/download-file/:id', (req, res) => {
   downloadDataController.downloadFile(req, res);
