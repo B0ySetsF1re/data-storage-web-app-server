@@ -10,15 +10,15 @@ const QueriesModel = require('../models/queriesModel');
 
 class UploadData {
   constructor(queries, client) {
-    this.queries = queries;
-    this.client = client;
+    this._queries = queries;
+    this._client = client;
 
-    this.parseFileBar = new cliProgress.SingleBar({
+    this._parseFileBar = new cliProgress.SingleBar({
       format: getCurrTimeConsole() +
       'API: parse file progress | {bar} | {percentage}% || {value}/{total} Bytes',
     }, cliProgress.Presets.shades_classic);
 
-    this.parseFileBar = new cliProgress.SingleBar({
+    this._uploadFileBar = new cliProgress.SingleBar({
       format: getCurrTimeConsole() +
       'API: upload file progress | {bar} | {percentage}% || {value}/{total} Chunks',
     }, cliProgress.Presets.shades_classic);
@@ -37,7 +37,7 @@ class UploadData {
       });
 
       form.on('progress', (bytesReceived, bytesExpected) => {
-          this.parseFileBar.update(bytesReceived);
+          this._parseFileBar.update(bytesReceived);
       });
 
       form.on('part', async part => {
@@ -66,19 +66,19 @@ class UploadData {
       form.on('close', () => {
         if(fileDataObj.byteCount > 1048576) {
           fileDataObj.chunks = chunks;
-          this.parseFileBar.stop();
+          this._parseFileBar.stop();
 
           resolve(fileDataObj);
         } else {
           fileDataObj.buffer = Buffer.concat(chunks);
-          this.parseFileBar.stop();
+          this._parseFileBar.stop();
 
           resolve(fileDataObj);
         }
       });
 
       form.parse(req);
-      this.parseFileBar.start(form.bytesExpected, 0);
+      this._parseFileBar.start(form.bytesExpected, 0);
     });
   }
 
@@ -105,7 +105,7 @@ class UploadData {
       .then(async (fileDataObj) => {
         const fileMetaDataQueryParams = [uuid, fileDataObj.filename, fileDataObj.disposition, fileDataObj.type, fileDataObj.extension, fileDataObj.byteCount, date, time];
 
-        await this.client.execute(this.queries.upsertFileMetaData, fileMetaDataQueryParams, { prepare: true })
+        await this._client.execute(this._queries.upsertFileMetaData, fileMetaDataQueryParams, { prepare: true })
           .then(() => {
             console.log(getCurrTimeConsole() + 'API: file meta data has been uploaded...');
           })
@@ -117,7 +117,7 @@ class UploadData {
           const bufferObj = fileDataObj.buffer; // this var might not needed
                                                 // however it is needed if we would like to specify encoding (same for chunks in else statement below)
                                                 // if the encoding will be applied, we need to specify it again while obtainig bufer from database on file download
-          this.client.execute(this.queries.upsertFileData, [uuid, 0, bufferObj], { prepare: true })
+          this._client.execute(this._queries.upsertFileData, [uuid, 0, bufferObj], { prepare: true })
             .then(() => {
               console.log(getCurrTimeConsole() + 'API: file data has been uploaded... File size is: ' + niceBytes(fileDataObj.byteCount).text);
               res.json({ 'Success': 'File upload finished...' });
@@ -128,13 +128,13 @@ class UploadData {
             });
 
         } else {
-          this.parseFileBar.start(fileDataObj.chunks.length, 0);
+          this._uploadFileBar.start(fileDataObj.chunks.length, 0);
 
           await asyncForEach(fileDataObj.chunks, async (chunk, chunk_id) => {
 
-            await this.client.execute(this.queries.upsertFileData, [uuid, chunk_id, chunk], { prepare: true })
+            await this._client.execute(this._queries.upsertFileData, [uuid, chunk_id, chunk], { prepare: true })
               .then(async () => {
-                this.parseFileBar.update(chunk_id);
+                this._uploadFileBar.update(chunk_id);
               })
               .catch(err => {
                 console.log(err);
@@ -142,8 +142,8 @@ class UploadData {
               });
           });
 
-          this.parseFileBar.increment();
-          this.parseFileBar.stop();
+          this._uploadFileBar.increment();
+          this._uploadFileBar.stop();
           console.log(getCurrTimeConsole() + 'API: file data has been uploaded... File size is: ' + niceBytes(fileDataObj.byteCount).text);
           res.json({ 'Success': 'File upload finished...' });
         }

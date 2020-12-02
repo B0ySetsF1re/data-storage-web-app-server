@@ -8,8 +8,8 @@ const QueriesModel = require('../models/queriesModel');
 
 class DownloadData {
   constructor(queries, client) {
-    this.queries = queries;
-    this.client = client;
+    this._queries = queries;
+    this._client = client;
   }
 
   async _setFileHeaderBeforeSend(fileMetaData) {
@@ -23,12 +23,12 @@ class DownloadData {
   }
 
   async downloadFile(req, res) {
-    this.client.execute(this.queries.selectFileMetaData, [req.params.id])
+    this._client.execute(this._queries.selectFileMetaData, [req.params.id])
       .then(fileMetaData => {
         return fileMetaData.first();
       })
       .then(fileMetaData => {
-        return this.client.execute(this.queries.selectFileChunks, [req.params.id])
+        return this._client.execute(this._queries.selectFileChunks, [req.params.id])
           .then(async chunks => {
             if(chunks.rowLength > 1) {
               let extractedChunks = [];

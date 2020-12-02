@@ -7,13 +7,13 @@ const QueriesModel = require('../models/queriesModel');
 
 class DataInfo {
   constructor(queries, client, mapper) {
-    this.queries = queries;
-    this.client = client;
-    this.mapper = mapper;
+    this._queries = queries;
+    this._client = client;
+    this._mapper = mapper;
   }
 
   async getFilesMetaDataContent(req, res) {
-    let content = await this.mapper.findAll()
+    let content = await this._mapper.findAll()
     .catch(err => {
       console.error(getCurrTimeConsole() + 'API: there was an error -', err);
       res.status(400).json({ 'Error': err.message });
@@ -39,7 +39,7 @@ class DataInfo {
   async _getAllUniqueFileExtensions() {
     let extensionsCollected = [];
 
-    await this.client.execute(this.queries.selectAllFileExtensionsAndLength)
+    await this._client.execute(this._queries.selectAllFileExtensionsAndLength)
       .then(async types => {
         await asyncForEach(types.rows, async (type) => {
           extensionsCollected.push(type.extension);
@@ -83,7 +83,7 @@ class DataInfo {
     const uniqueExtensions = await this._getAllUniqueFileExtensions();
     let contentObj = await this._initFileStatsContentObj();
 
-    await this.client.execute(this.queries.selectAllFileExtensionsAndLength)
+    await this._client.execute(this._queries.selectAllFileExtensionsAndLength)
       .then(async (files) => {
 
         await asyncForEach(uniqueExtensions, async (extension) => {

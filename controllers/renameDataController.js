@@ -8,12 +8,12 @@ const QueriesModel = require('../models/queriesModel');
 
 class RenameData {
   constructor(queries, client) {
-    this.queries = queries;
-    this.client = client;
+    this._queries = queries;
+    this._client = client;
   }
 
   async renameFile(req, res) {
-    await this.client.execute(this.queries.selectFileMetaDataNameAndDisposition, [req.params.id])
+    await this._client.execute(this._queries.selectFileMetaDataNameAndDisposition, [req.params.id])
       .then(async (fileNameData) => {
         if(!req.body.new_name) {
           throw new Error('File name was not defined!');
@@ -25,7 +25,7 @@ class RenameData {
         const newFileDisposition = fileNameData.first().disposition.replace(regex, 'filename="' + newFileName + '"');
         const params = [newFileName, newFileDisposition, req.params.id];
 
-        return await this.client.execute(this.queries.updateFileMetaDataNameAndDisposition, params)
+        return await this._client.execute(this._queries.updateFileMetaDataNameAndDisposition, params)
       })
       .then(() => {
         res.status(200).json({ 'Success': 'File name has been changed...'});

@@ -8,13 +8,13 @@ const QueriesModel = require('../models/queriesModel');
 
 class DeleteData {
   constructor(queries, client, mapper) {
-    this.queries = queries;
-    this.client = client;
-    this.mapper = mapper;
+    this._queries = queries;
+    this._client = client;
+    this._mapper = mapper;
   }
 
     async deleteFile(req, res) {
-      let deletedFileInfo = await this.mapper.find({ object_id: req.params.id })
+      let deletedFileInfo = await this._mapper.find({ object_id: req.params.id })
         .catch(err => {
           console.error(getCurrTimeConsole() + 'API: there was an error -', err);
           res.status(400).json({ 'Error': err.message });
@@ -23,9 +23,9 @@ class DeleteData {
         });
       deletedFileInfo = deletedFileInfo.toArray()[0];
 
-      await this.client.execute(this.queries.deleteFileMetaDataContent, [req.params.id])
+      await this._client.execute(this._queries.deleteFileMetaDataContent, [req.params.id])
         .then(() => {
-          return this.client.execute(this.queries.deleteFileDataContent, [req.params.id]);
+          return this._client.execute(this._queries.deleteFileDataContent, [req.params.id]);
         })
         .then(() => {
           console.log(getCurrTimeConsole() + 'API: file "' + deletedFileInfo.file_name + '" has been deleted successfully...');
@@ -38,9 +38,9 @@ class DeleteData {
     }
 
     async deleteAllFiles(req, res) {
-      await this.client.execute(this.queries.deleteAllFilesMetaDataContent)
+      await this._client.execute(this._queries.deleteAllFilesMetaDataContent)
         .then(() => {
-          return this.client.execute(this.queries.deleteAllFilesDataContent);
+          return this._client.execute(this._queries.deleteAllFilesDataContent);
         })
         .then(() => {
           console.log(getCurrTimeConsole() + 'API: all the files have been deleted successfully...');
@@ -61,9 +61,9 @@ class DeleteData {
         }
 
         await asyncForEach(req.body.ids, async (id) => {
-          await this.client.execute(this.queries.deleteFileMetaDataContent, [id])
+          await this._client.execute(this._queries.deleteFileMetaDataContent, [id])
             .then(async () => {
-              return await this.client.execute(this.queries.deleteFileDataContent, [id]);
+              return await this._client.execute(this._queries.deleteFileDataContent, [id]);
             })
             .catch(err => {
               console.error(getCurrTimeConsole() + 'API: there was an error -', err);
