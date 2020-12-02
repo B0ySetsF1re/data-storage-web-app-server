@@ -16,10 +16,15 @@ const DataInfo = require('../controllers/dataInfoController');
 const RenameData = require('../controllers/renameDataController');
 const DeleteData = require('../controllers/deleteDataController');
 
+// DB config
+const KEYSPACE = process.env.DB_KEYSPACE;
+const HOST = process.env.HOST;
+const DATACENTER = process.env.DB_DATACENTER;
+
 // Connecting and configuring cassandra client and mappers
-const queries = new QueriesModel(process.env.DB_KEYSPACE);
-const client = new DBClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER).getClient();
-const mapperClient = new DBMapperClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER).getMapperClient();
+const queries = new QueriesModel(KEYSPACE);
+const client = new DBClientModel(HOST, KEYSPACE, DATACENTER).getClient();
+const mapperClient = new DBMapperClientModel(HOST, KEYSPACE, DATACENTER).getMapperClient();
 const mappingOptions = new DBMapperOptionsModel();
 const mapper = new mapping.Mapper(mapperClient, mappingOptions);
 const fileMetaDataMapper = mapper.forModel('fileMetaData');
