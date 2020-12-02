@@ -1,5 +1,4 @@
 const getCurrTimeConsole = require('../lib/debuggingTools/getCurrentTime/console');
-const asyncForEach = require('../lib/asyncForEach/index');
 
 const contentDisposition = require('content-disposition');
 const niceBytes = require('nice-bytes');
@@ -60,7 +59,7 @@ class DeleteData {
           throw new Error('No files were selected!');
         }
 
-        await asyncForEach(req.body.ids, async (id) => {
+        for await (const id of req.body.ids) {
           await this._client.execute(this._queries.deleteFileMetaDataContent, [id])
             .then(async () => {
               return await this._client.execute(this._queries.deleteFileDataContent, [id]);
@@ -69,7 +68,7 @@ class DeleteData {
               console.error(getCurrTimeConsole() + 'API: there was an error -', err);
               res.status(400).json({ 'Error': err.message });
             });
-        });
+        };
 
         console.log(getCurrTimeConsole() + 'API: all the selected files have been deleted successfully...');
         res.status(200).json({ 'Success': 'All the selected files have been deleted successfully...'});

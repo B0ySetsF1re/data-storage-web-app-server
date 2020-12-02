@@ -1,5 +1,4 @@
 const getCurrTimeConsole = require('../lib/debuggingTools/getCurrentTime/console');
-const asyncForEach = require('../lib/asyncForEach/index');
 
 const multiparty = require('multiparty');
 const niceBytes = require('nice-bytes');
@@ -130,7 +129,7 @@ class UploadData {
         } else {
           this._uploadFileBar.start(fileDataObj.chunks.length, 0);
 
-          await asyncForEach(fileDataObj.chunks, async (chunk, chunk_id) => {
+          for await (const [chunk_id, chunk] of fileDataObj.chunks.entries()) {
 
             await this._client.execute(this._queries.upsertFileData, [uuid, chunk_id, chunk], { prepare: true })
               .then(async () => {
@@ -140,7 +139,7 @@ class UploadData {
                 console.log(err);
                 res.status(400).json({ 'Error': err.message });
               });
-          });
+          };
 
           this._uploadFileBar.increment();
           this._uploadFileBar.stop();

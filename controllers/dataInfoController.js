@@ -1,5 +1,4 @@
 const getCurrTimeConsole = require('../lib/debuggingTools/getCurrentTime/console');
-const asyncForEach = require('../lib/asyncForEach/index');
 
 const niceBytes = require('nice-bytes');
 
@@ -21,7 +20,7 @@ class DataInfo {
 
     let formattedContent = [];
 
-    await asyncForEach(content.toArray(), async (row) => {
+    for await (const row of content.toArray()){
       formattedContent.push({
             object_id: row.object_id.toString(),
             file_name: row.file_name,
@@ -32,7 +31,7 @@ class DataInfo {
             upload_date: row.upload_date,
             upload_time: row.upload_time.toString().split('.')[0]
           });
-    });
+    };
     res.status(200).send(JSON.stringify(formattedContent));
   }
 
@@ -56,9 +55,9 @@ class DataInfo {
     const extensions = await this._getAllUniqueFileExtensions();
     let fileContentObj = {};
 
-    await asyncForEach(extensions, async (extension) => {
+    for await (const extension of extensions) {
       fileContentObj[extension] = 0;
-    });
+    };
 
     fileContentObj.total_content_size = 0;
 
@@ -70,9 +69,9 @@ class DataInfo {
     const extensions = await this._getAllUniqueFileExtensions();
     let fileContentArr = [];
 
-    await asyncForEach(extensions, async (extension) => {
+    for await (const extension of extensions) {
       fileContentArr[extension] = 0;
-    });
+    };
 
     fileContentArr['total_content_size'] = 0;
 
@@ -86,14 +85,14 @@ class DataInfo {
     await this._client.execute(this._queries.selectAllFileExtensionsAndLength)
       .then(async (files) => {
 
-        await asyncForEach(uniqueExtensions, async (extension) => {
-          await asyncForEach(files.rows, async (file) => {
+        for await (const extension of uniqueExtensions) {
+          for await (const file of files.rows) {
             if(extension == file.extension) {
               contentObj[extension] += file.length;
               contentObj.total_content_size += file.length;
             }
-          });
-        });
+          };
+        };
 
         for(const property in contentObj) {
           contentObj[property] = niceBytes(contentObj[property]).text;

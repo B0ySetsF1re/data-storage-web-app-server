@@ -1,5 +1,4 @@
 const getCurrTimeConsole = require('../lib/debuggingTools/getCurrentTime/console');
-const asyncForEach = require('../lib/asyncForEach/index');
 
 const contentDisposition = require('content-disposition');
 const niceBytes = require('nice-bytes');
@@ -38,9 +37,9 @@ class DownloadData {
                   extractedChunks.push(row.data);
                 }
               } else {
-                await asyncForEach(chunks.rows, async (row) => {
+                for await (const row of chunks.rows) {
                   extractedChunks.push(row.data);
-                });
+                };
               }
 
               res.status(200);
