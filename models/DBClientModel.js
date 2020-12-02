@@ -3,12 +3,13 @@ const Client = cassandra.Client;
 
 const getCurrTimeConsole = require('../lib/debuggingTools/getCurrentTime/console');
 const QueriesModel = require('./queriesModel');
-const queries = new QueriesModel(process.env.DB_KEYSPACE);
 
 module.exports = function DBClientModel(HOST, KEYSPACE, DATACENTER) {
   if(!new.target) {
     return new DBClientModel(HOST, KEYSPACE, DATACENTER);
   }
+
+  this._queries = new QueriesModel(KEYSPACE);
 
   this._client = new Client({
     contactPoints: [HOST],
@@ -18,15 +19,15 @@ module.exports = function DBClientModel(HOST, KEYSPACE, DATACENTER) {
 
   this._client.connect()
     .then(() => {
-      return this._client.execute(queries.createKeySpace);
+      return this._client.execute(this._queries.createKeySpace);
     })
     .then(() => {
       console.log(getCurrTimeConsole() + 'API: keyspace initialization complete');
-      return this._client.execute(queries.createFilesMetaDataTable);
+      return this._client.execute(this._queries.createFilesMetaDataTable);
     })
     .then(() => {
       console.log(getCurrTimeConsole() + 'API: files metadata table initialization complete');
-      return this._client.execute(queries.crateFilesDataTable);
+      return this._client.execute(this._queries.crateFilesDataTable);
     })
     .then(() => {
       console.log(getCurrTimeConsole() + 'API: files data table initialization complete');
