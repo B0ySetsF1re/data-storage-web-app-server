@@ -26,7 +26,7 @@ module.exports = function DBMapperClientModel(HOST, KEYSPACE, DATACENTER) {
       return this._client.shutdown().then(() => { throw err; });
     });
 
-    this.getMP = () => {
+    this.getMapperClient = () => {
       return this._mapperClient;
     }
 

@@ -38,7 +38,7 @@ module.exports = function DBClientModel(HOST, KEYSPACE, DATACENTER) {
       return this._client.shutdown().then(() => { throw err; });
     });
 
-    this.getDB = () => {
+    this.getClient = () => {
       return this._client;
     }
 
