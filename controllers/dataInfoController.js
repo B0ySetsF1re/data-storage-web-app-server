@@ -40,9 +40,9 @@ class DataInfo {
 
     await this._client.execute(this._queries.selectAllFileExtensionsAndLength)
       .then(async types => {
-        await asyncForEach(types.rows, async (type) => {
+        for await (const type of types.rows) {
           extensionsCollected.push(type.extension);
-        })
+        }
       })
       .catch(err => {
         return err;
