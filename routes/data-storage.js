@@ -18,19 +18,19 @@ const DeleteData = require('../controllers/deleteDataController');
 
 // Connecting and configuring cassandra client and mappers
 const queries = new QueriesModel(process.env.DB_KEYSPACE);
-const client = new DBClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER);
-const mapperClient = new DBMapperClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER).getMP();
+const client = new DBClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER).getClient();
+const mapperClient = new DBMapperClientModel(process.env.HOST, process.env.DB_KEYSPACE, process.env.DB_DATACENTER).getMapperClient();
 const mappingOptions = new DBMapperOptionsModel();
 const mapper = new mapping.Mapper(mapperClient, mappingOptions);
 const fileMetaDataMapper = mapper.forModel('fileMetaData');
 const fileDataMapper = mapper.forModel('fileData');
 
 // Controllers (instantiated objects)
-const uploadDataController = new UploadData(queries, client.getDB());
-const downloadDataController = new DownloadData(queries, client.getDB());
-const dataInfoController = new DataInfo(queries, client.getDB(), fileMetaDataMapper);
-const renameDataController = new RenameData(queries, client.getDB());
-const deleteDataController = new DeleteData(queries, client.getDB(), fileMetaDataMapper);
+const uploadDataController = new UploadData(queries, client);
+const downloadDataController = new DownloadData(queries, client);
+const dataInfoController = new DataInfo(queries, client, fileMetaDataMapper);
+const renameDataController = new RenameData(queries, client);
+const deleteDataController = new DeleteData(queries, client, fileMetaDataMapper);
 
 router.get('/', (req, res) => {
   // res.setHeader('Content-Type', 'application/json');
