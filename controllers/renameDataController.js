@@ -9,7 +9,7 @@ class RenameData {
     if(!queries instanceof QueriesModel) {
       throw new Error('Queries must be instantiated by the "QueriesModel" class!');
     } else if(!client instanceof Client) {
-      throw new Error('Queries must be instantiated by the cassandra-driver "Client" class!')
+      throw new Error('Client must be instantiated by the cassandra-driver "Client" class!')
     }
 
     this._queries = queries;

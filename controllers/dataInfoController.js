@@ -10,9 +10,9 @@ class DataInfo {
     if(!queries instanceof QueriesModel) {
       throw new Error('Queries must be instantiated by the "QueriesModel" class!');
     } else if(!client instanceof Client) {
-      throw new Error('Queries must be instantiated by the cassandra-driver "Client" class!')
+      throw new Error('Client must be instantiated by the cassandra-driver "Client" class!')
     } else if (!mapper instanceof mapping.ModelMapper) {
-      throw new Error('Queries must be instantiated by the cassandra-driver "mapping.ModelMapper" class!')
+      throw new Error('Mapper must be instantiated by the cassandra-driver "mapping.ModelMapper" class!')
     }
 
     this._queries = queries;
