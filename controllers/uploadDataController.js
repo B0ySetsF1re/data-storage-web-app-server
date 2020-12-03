@@ -8,9 +8,9 @@ const QueriesModel = require('../models/queriesModel');
 
 class UploadData {
   constructor(queries, client) {
-    if(!queries instanceof QueriesModel) {
+    if(!(queries instanceof QueriesModel)) {
       throw new Error('Queries must be instantiated by the "QueriesModel" class!');
-    } else if(!client instanceof Client) {
+    } else if(!(client instanceof Client)) {
       throw new Error('Client must be instantiated by the cassandra-driver "Client" class!')
     }
 
