@@ -2,7 +2,7 @@ const getCurrTimeConsole = require('../lib/debuggingTools/getCurrentTime/console
 
 const niceBytes = require('nice-bytes');
 const cliProgress = require('cli-progress');
-const { Client, mapping, types } = require('cassandra-driver');
+const { Client, types } = require('cassandra-driver');
 
 const QueriesModel = require('../models/queriesModel');
 
