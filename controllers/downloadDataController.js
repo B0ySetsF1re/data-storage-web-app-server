@@ -1,11 +1,18 @@
 const getCurrTimeConsole = require('../lib/debuggingTools/getCurrentTime/console');
 
 const contentDisposition = require('content-disposition');
+const { Client } = require('cassandra-driver');
 
 const QueriesModel = require('../models/queriesModel');
 
 class DownloadData {
   constructor(queries, client) {
+    if(!queries instanceof QueriesModel) {
+      throw new Error('Queries must be instantiated by the "QueriesModel" class!');
+    } else if(!client instanceof Client) {
+      throw new Error('Queries must be instantiated by the cassandra-driver "Client" class!')
+    }
+
     this._queries = queries;
     this._client = client;
   }

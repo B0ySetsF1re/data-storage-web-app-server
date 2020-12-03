@@ -1,11 +1,20 @@
 const getCurrTimeConsole = require('../lib/debuggingTools/getCurrentTime/console');
 
 const contentDisposition = require('content-disposition');
+const { Client, mapping } = require('cassandra-driver');
 
 const QueriesModel = require('../models/queriesModel');
 
 class DeleteData {
   constructor(queries, client, mapper) {
+    if(!queries instanceof QueriesModel) {
+      throw new Error('Queries must be instantiated by the "QueriesModel" class!');
+    } else if(!client instanceof Client) {
+      throw new Error('Queries must be instantiated by the cassandra-driver "Client" class!')
+    } else if (!mapper instanceof mapping.ModelMapper) {
+      throw new Error('Queries must be instantiated by the cassandra-driver "mapping.ModelMapper" class!')
+    }
+
     this._queries = queries;
     this._client = client;
     this._mapper = mapper;
