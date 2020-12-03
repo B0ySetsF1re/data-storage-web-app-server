@@ -1,7 +1,6 @@
 const getCurrTimeConsole = require('../lib/debuggingTools/getCurrentTime/console');
 
 const contentDisposition = require('content-disposition');
-const niceBytes = require('nice-bytes');
 
 const QueriesModel = require('../models/queriesModel');
 
