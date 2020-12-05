@@ -1,5 +1,6 @@
 const getCurrTimeConsole = require('../lib/debuggingTools/getCurrentTime/console');
 
+const multiparty = require('multiparty');
 const niceBytes = require('nice-bytes');
 const cliProgress = require('cli-progress');
 const { Client, types } = require('cassandra-driver');
