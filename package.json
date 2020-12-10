@@ -18,13 +18,14 @@
   "homepage": "https://github.com/B0ySetsF1re/data-storage-web-app-server#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "cassandra-driver": "^4.6.0",
+    "cassandra-driver": "^4.6.1",
     "cli-progress": "^3.8.2",
     "content-disposition": "^0.5.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "multiparty": "^4.2.2",
-    "nice-bytes": "^1.1.0"
+    "nice-bytes": "^1.1.0",
+    "phantomjs-prebuilt": "^2.1.16"
   }
 }
