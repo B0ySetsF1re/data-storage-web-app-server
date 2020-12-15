@@ -54,6 +54,7 @@ class UploadData {
         if(part.byteCount <= 0) {
           //throw new Error('Empty data received!');
           reject(new Error('Empty data received!'));
+          return;
         }
 
         fileDataObj.disposition = part.headers["content-disposition"];
