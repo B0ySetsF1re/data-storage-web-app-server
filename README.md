@@ -53,23 +53,23 @@ DB_DATACENTER=datacenter1
 
 This **_config_** can be changed as whatever you like (setting your own host, port and more), even for the **_prod_** deployment.
 
-### Queries model object instantiation from a function-constructor config
+### Queries and other models object instantiation from a function-constructor config
 
-It is possible to instantiate queries model **(dataStorageQueriesModel.js)** with environment variable or any other variable you like:
-
-```javascript
-// using env var
-
-const QueriesModel = require('../models/dataStorageQueriesModel');
-const queries = new QueriesModel(process.env.DB_KEYSPACE);
-
-```
+It is possible to instantiate queries and other models with the desired **KEYSPACE** name, **HOST** etc. by environment variable or any other variable you like:
 
 ```javascript
-// using regular var
+// DB config (using env var)
+const KEYSPACE = process.env.DB_KEYSPACE;
+const HOST = process.env.HOST;
+const DATACENTER = process.env.DB_DATACENTER;
+
+// DB config (using custom values)
+const KEYSPACE = 'data_storage';
+const HOST = 'localhost';
+const DATACENTER = 'datacenter1';
 
 const QueriesModel = require('../models/dataStorageQueriesModel');
-const queries = new QueriesModel('data_storage');
+const queries = new QueriesModel(KEYSPACE);
 
 ```
 
