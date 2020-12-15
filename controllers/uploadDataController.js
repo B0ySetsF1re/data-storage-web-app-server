@@ -61,7 +61,13 @@ class UploadData {
         fileDataObj.type = part.headers["content-type"];
         fileDataObj.fieldname = part.name;
         fileDataObj.filename = part.filename;
-        fileDataObj.extension = part.filename.split('.').pop();
+
+        try {
+          fileDataObj.extension = part.filename.split('.').pop();
+        } catch(err) {
+          reject(new Error('Looks like the file was not selected before sending!'));
+        }
+
         fileDataObj.byteCount = part.byteCount;
 
         part.on('data', chunk => {
